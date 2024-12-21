@@ -7,7 +7,7 @@ load_dotenv()
 
 
 class DataBaseConfig(BaseModel):
-    NAME: str = ''
+    NAME: str = 'TEST'
     USER: str = 'postgres'
     PASSWORD: str = 'admin12345'
     HOST: str = 'localhost'
@@ -15,7 +15,7 @@ class DataBaseConfig(BaseModel):
     PLUGIN: str = 'asyncpg'
     URL: str = f"postgresql+{PLUGIN}://{USER}:{PASSWORD}@{HOST}:{PORT}/{NAME}"
     ECHO: bool = True
-    DROPS_AFTER_START: bool = False
+    DROPS_AFTER_START: bool = True
 
 
 class BackEndConfig(BaseModel):

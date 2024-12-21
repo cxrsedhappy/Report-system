@@ -9,8 +9,8 @@ from src.config import dbcfg
 Base = declarative_base()
 
 engine = create_async_engine(
-    url=dbcfg.DB_URL,
-    echo=dbcfg.DB_ECHO
+    url=dbcfg.URL,
+    echo=dbcfg.ECHO
 )
 
 session_factory = async_sessionmaker(
@@ -28,6 +28,7 @@ async def global_init():
             await connection.run_sync(Base.metadata.drop_all)
 
         await connection.run_sync(Base.metadata.create_all)
+        print(engine.url)
 
 
 async def create_session() -> AsyncSession:

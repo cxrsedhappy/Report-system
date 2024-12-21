@@ -1,5 +1,6 @@
 __all__ = {
-    'dbcfg'
+    'dbcfg',
+    'becfg'
 }
 
-from config import dbcfg, becfg
+from .config import dbcfg, becfg
