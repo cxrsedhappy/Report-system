@@ -1,26 +1,27 @@
 from contextlib import asynccontextmanager
 
+import logging
 import uvicorn
+
 from fastapi import FastAPI, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import Session
 
-from database.engine import global_init
-from database.tables.student import Student
-from src.database.engine import create_session
+from src.database.engine import global_init, create_session
+from src.database.tables.user import User
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await global_init()
+    logger.info('Database initialization was finished.')
     yield
 
 app = FastAPI(title='Reporting System', version='0.0.1', lifespan=lifespan)
-
+logger = logging.getLogger('uvicorn.error')
 @app.get('/')
 async def index(session: AsyncSession = Depends(create_session)):
-    s = Student(id=1, name='ASD')
-    session.add(s)
+    user = User(password="passwd", name="name", surname="surname", lastname="lastname")
+    session.add(user)
     await session.commit()
     return {'Ping': 'Pong'}
 

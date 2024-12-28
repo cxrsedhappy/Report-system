@@ -1,17 +1,21 @@
 from __future__ import annotations
 
+import sys
+import logging
+
+from sqlalchemy.exc import OperationalError
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.ext.declarative import declarative_base
 
 from src.config import dbcfg
-
-Base = declarative_base()
+from src.database.tables import Base
 
 engine = create_async_engine(
     url=dbcfg.URL,
     echo=dbcfg.ECHO
 )
+
+logger = logging.getLogger('uvicorn.error')
 
 session_factory = async_sessionmaker(
     bind=engine,
@@ -24,11 +28,16 @@ session_factory = async_sessionmaker(
 async def global_init():
     """Database initialization"""
     async with engine.begin() as connection:
-        if dbcfg.DROPS_AFTER_START:
-            await connection.run_sync(Base.metadata.drop_all)
+        try:
+            if dbcfg.DROPS_AFTER_START:
+                await connection.run_sync(Base.metadata.drop_all)
+                logger.info("Dropping existed tables. DROPS_AFTER_START=True.")
 
-        await connection.run_sync(Base.metadata.create_all)
-        print(engine.url)
+            await connection.run_sync(Base.metadata.create_all)
+            logger.info("Database tables created successfully.")
+        except OperationalError as e:
+            logger.error(f"Error occurred when trying create tables: {e}.")
+            sys.exit(1)
 
 
 async def create_session() -> AsyncSession:

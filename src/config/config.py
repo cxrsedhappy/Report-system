@@ -7,7 +7,7 @@ load_dotenv()
 
 
 class DataBaseConfig(BaseModel):
-    NAME: str = 'TEST'
+    NAME: str = 'ReportSystem'
     USER: str = 'postgres'
     PASSWORD: str = 'admin12345'
     HOST: str = 'localhost'
