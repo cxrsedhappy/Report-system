@@ -14,4 +14,10 @@ Description
 
 ### Technologies
 
+- FastAPI 
+- SQLAlchemy
+- Postgres
+- uvicorn
+- logging
+
 ## License
