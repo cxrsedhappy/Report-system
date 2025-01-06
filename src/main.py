@@ -13,6 +13,7 @@ from src.database.tables.user import User
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    logger.info('Database initialization was started.')
     await global_init()
     logger.info('Database initialization was finished.')
     yield
