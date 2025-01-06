@@ -4,6 +4,7 @@ import logging
 import uvicorn
 
 from fastapi import FastAPI, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database.engine import global_init, create_session
@@ -17,6 +18,13 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(title='Reporting System', version='0.0.1', lifespan=lifespan)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 logger = logging.getLogger('uvicorn.error')
 @app.get('/')
 async def index(session: AsyncSession = Depends(create_session)):
