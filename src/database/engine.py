@@ -10,6 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.config import dbcfg
 from src.database.tables import Base
 
+print(dbcfg.URL)
 engine = create_async_engine(
     url=dbcfg.URL,
     echo=dbcfg.ECHO
@@ -30,8 +31,8 @@ async def global_init():
     async with engine.begin() as connection:
         try:
             if dbcfg.DROPS_AFTER_START:
-                await connection.run_sync(Base.metadata.drop_all)
                 logger.info("Dropping existed tables. DROPS_AFTER_START=True.")
+                await connection.run_sync(Base.metadata.drop_all)
 
             await connection.run_sync(Base.metadata.create_all)
             logger.info("Database tables created successfully.")
