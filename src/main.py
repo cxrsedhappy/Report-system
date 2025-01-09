@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database.engine import global_init, create_session
 from src.database.tables.user import User
+from src.api import user_router, auth_router
 
 
 @asynccontextmanager
@@ -19,6 +20,8 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(title='Reporting System', version='0.0.1', lifespan=lifespan)
+app.include_router(user_router)
+app.include_router(auth_router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=['*'],
@@ -29,7 +32,7 @@ app.add_middleware(
 logger = logging.getLogger('uvicorn.error')
 @app.get('/')
 async def index(session: AsyncSession = Depends(create_session)):
-    user = User(password="passwd", name="name", surname="surname", lastname="lastname")
+    user = User(login="login", password="passwd", name="name", surname="surname", lastname="lastname", privilege=3)
     session.add(user)
     await session.commit()
     return {'Ping': 'Pong'}

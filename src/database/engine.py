@@ -4,8 +4,8 @@ import sys
 import logging
 
 from sqlalchemy.exc import OperationalError
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 
 from src.config import dbcfg
 from src.database.tables import Base
