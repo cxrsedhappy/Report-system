@@ -85,10 +85,23 @@ class Exam(Base, TimestampMixin):
     )
     student: Mapped[Student] = relationship(back_populates='exams')
 
-    subject: Mapped[str] = mapped_column(default="", nullable=True)
+    subject_id: Mapped[int] = mapped_column(
+        ForeignKey('subjects.id', ondelete="CASCADE", name='FK_exam_subject'),
+        default="",
+        nullable=True
+    )
     semester: Mapped[int] = mapped_column(default=1, nullable=True)
     year: Mapped[datetime] = mapped_column(default=datetime.now(), nullable=True)
     score: Mapped[int] = mapped_column(default=0, nullable=True)
+
+    def __str__(self):
+        return f""
+
+
+class Subject(Base, TimestampMixin):
+    __tablename__ = 'subjects'
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(default="", nullable=False)
 
     def __str__(self):
         return f""
