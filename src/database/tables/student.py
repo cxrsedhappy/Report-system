@@ -37,7 +37,7 @@ class Student(Base, TimestampMixin):
     )
 
     def __str__(self):
-        return f""
+        return f"<Student id={self.id} name={self.name}>"
 
 
 class Group(Base, TimestampMixin):
@@ -52,7 +52,7 @@ class Group(Base, TimestampMixin):
     )
 
     def __str__(self):
-        return f""
+        return f"<Group id={self.id} name={self.name}>"
 
 
 class Diploma(Base, TimestampMixin):
@@ -66,13 +66,13 @@ class Diploma(Base, TimestampMixin):
     student: Mapped[Student] = relationship(back_populates='diploma')
 
     assignment: Mapped[str] = mapped_column(default="", nullable=True)
-    title: Mapped[str] = mapped_column(default="", nullable=True)
+    title: Mapped[bool] = mapped_column(default=False, nullable=True)
 
     chapters: Mapped[int] = mapped_column(default=0, nullable=True)
     originality: Mapped[int] = mapped_column(default=0, nullable=True)
 
     def __str__(self):
-        return f""
+        return f"Diploma id={self.id} assignment={self.assignment} title={self.title}"
 
 
 class Exam(Base, TimestampMixin):
@@ -95,7 +95,7 @@ class Exam(Base, TimestampMixin):
     score: Mapped[int] = mapped_column(default=0, nullable=True)
 
     def __str__(self):
-        return f""
+        return f"Exam id={self.id} subject={self.subject_id} score={self.score}"
 
 
 class Subject(Base, TimestampMixin):
@@ -104,4 +104,4 @@ class Subject(Base, TimestampMixin):
     name: Mapped[str] = mapped_column(default="", nullable=False)
 
     def __str__(self):
-        return f""
+        return f"Subject id={self.id} name={self.name}"
