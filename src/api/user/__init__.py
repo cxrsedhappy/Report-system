@@ -1,9 +1,8 @@
 __all__ = {
     'user_router',
-    'User',
-    'CreateUser',
-    'UserLogin'
+    'UserSchema',
+    'CreateUserSchema',
 }
 
 from .view import router as user_router
-from .models import User, CreateUser, UserLogin
+from .models import UserSchema, CreateUserSchema
