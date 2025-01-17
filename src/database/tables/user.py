@@ -1,3 +1,6 @@
+import random
+import string
+
 from sqlalchemy.orm import mapped_column, Mapped
 
 from src.database.tables.base import Base
@@ -18,7 +21,10 @@ class User(Base, TimestampMixin):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     login: Mapped[str] = mapped_column(unique=True, nullable=False)
     password: Mapped[str] = mapped_column(nullable=False)
-
+    salt: Mapped[str] = mapped_column(
+        default=''.join(random.choices(string.digits + string.punctuation + string.ascii_letters, k=8)),
+        nullable=True
+    )
     name: Mapped[str] = mapped_column(nullable=False)
     surname: Mapped[str] = mapped_column(nullable=False)
     lastname: Mapped[str] = mapped_column(nullable=False)

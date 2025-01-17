@@ -22,7 +22,7 @@ async def login(response: Response, creds: Credentials, session: AsyncSession = 
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    if not verify_password(creds.password, user.password):
+    if not verify_password(creds.password, user.password, user.salt):
         raise HTTPException(status_code=401, detail="Incorrect credentials")
 
     payload = {"id": user.id, "login": user.login}

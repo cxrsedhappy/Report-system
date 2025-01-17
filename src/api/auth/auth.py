@@ -39,9 +39,9 @@ def create_access_token(payload: dict, expires_delta: timedelta = timedelta(days
     payload.update({"exp": expire})
     return jwt.encode(payload, secret_key, algorithm=algorithm)
 
-def verify_password(plain_password, hashed_password):
-    return bcrypt_context.verify(plain_password, hashed_password)
+def verify_password(password, hashed_password, salt=''):
+    return bcrypt_context.verify(password + salt, hashed_password)
 
-def get_password_hash(password):
-    return bcrypt_context.hash(password)
+def get_password_hash(password, salt=''):
+    return bcrypt_context.hash(password + salt)
 
