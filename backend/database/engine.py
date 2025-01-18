@@ -7,8 +7,8 @@ from sqlalchemy.exc import OperationalError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 
-from src.config import dbcfg
-from src.database.tables import Base
+from backend.config import dbcfg
+from backend.database.tables import Base
 
 print(dbcfg.URL)
 engine = create_async_engine(

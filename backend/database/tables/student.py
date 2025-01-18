@@ -5,8 +5,8 @@ from datetime import datetime
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 
-from src.database.tables import Base
-from src.database.tables.mixins import TimestampMixin
+from backend.database.tables import Base
+from backend.database.tables.mixins import TimestampMixin
 
 class Student(Base, TimestampMixin):
     __tablename__ = 'students'

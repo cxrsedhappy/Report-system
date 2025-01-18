@@ -7,9 +7,9 @@ from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.database.engine import global_init, create_session
-from src.database.tables.user import User
-from src.api import user_router, auth_router
+from backend.database.engine import global_init, create_session
+from backend.database.tables.user import User
+from backend.api import user_router, auth_router
 
 
 @asynccontextmanager

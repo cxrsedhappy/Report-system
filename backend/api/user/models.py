@@ -8,8 +8,6 @@ class UserSchema(BaseModel):
     surname: str
     lastname: str
     privilege: int
-    updated_at: str
-    created_at: str
 
     class Config:
         from_attributes = True

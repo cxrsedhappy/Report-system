@@ -3,8 +3,8 @@ import string
 
 from sqlalchemy.orm import mapped_column, Mapped
 
-from src.database.tables.base import Base
-from src.database.tables.mixins import TimestampMixin
+from backend.database.tables.base import Base
+from backend.database.tables.mixins import TimestampMixin
 
 class User(Base, TimestampMixin):
     """
@@ -28,6 +28,9 @@ class User(Base, TimestampMixin):
     name: Mapped[str] = mapped_column(nullable=False)
     surname: Mapped[str] = mapped_column(nullable=False)
     lastname: Mapped[str] = mapped_column(nullable=False)
+
+    email: Mapped[str] = mapped_column(nullable=False)
+    is_email_confirmed: Mapped[bool] = mapped_column(default=False, nullable=False)
 
     privilege: Mapped[int] = mapped_column(default=0, nullable=False)
 

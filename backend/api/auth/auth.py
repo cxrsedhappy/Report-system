@@ -7,7 +7,7 @@ from fastapi.security import OAuth2PasswordBearer
 
 from passlib.context import CryptContext
 
-from src.config import becfg
+from backend.config import becfg
 
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="oauth2/authorize")
