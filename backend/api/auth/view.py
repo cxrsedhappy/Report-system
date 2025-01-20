@@ -11,7 +11,7 @@ from backend.api.auth.models import Credentials, Token
 from backend.database.tables import User
 from backend.database.engine import create_session
 
-auth = APIRouter(prefix='/oauth2', tags=['oauth2'])
+auth = APIRouter(prefix='/api/oauth2', tags=['oauth2'])
 
 @auth.post("/authorize", response_model=Token)
 async def login(response: Response, creds: Credentials, session: AsyncSession = Depends(create_session)) -> Token:
@@ -25,7 +25,7 @@ async def login(response: Response, creds: Credentials, session: AsyncSession = 
     if not verify_password(creds.password, user.password, user.salt):
         raise HTTPException(status_code=401, detail="Incorrect credentials")
 
-    payload = {"id": user.id, "login": user.login}
+    payload = {"id": user.id, "login": user.login, "privilege": user.privilege}
     token = create_access_token(payload, timedelta(days=30))
     response.set_cookie(key="access_token", value=token, max_age=30 * 24 * 60 * 60)
     return Token(access_token=token, token_type="bearer")

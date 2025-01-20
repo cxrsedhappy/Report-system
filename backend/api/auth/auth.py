@@ -26,11 +26,12 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
         payload = jwt.decode(token, secret_key, algorithms=[algorithm])
         uid: int = payload.get("id")
         login: str = payload.get("login")
+        privilege: int = payload.get("privilege")
 
         if uid is None or login is None:
             raise credentials_exception
 
-        return {"id": uid, "login": login}
+        return {"id": uid, "login": login, "privilege": privilege}
     except JWTError:
         raise credentials_exception
 
