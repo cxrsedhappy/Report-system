@@ -22,3 +22,16 @@ class CreateUserSchema(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class UpdateUserSchema(BaseModel):
+    user_id: int = None
+    login: str = None
+    password: str = None
+    name: str = None
+    surname: str = None
+    lastname: str = None
+    privilege: int = None
+
+    class Config:
+        from_attributes = True

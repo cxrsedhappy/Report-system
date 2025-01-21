@@ -15,7 +15,7 @@ class DataBaseConfig(BaseModel):
     PLUGIN: str = 'asyncpg'
     URL: str = f"postgresql+{PLUGIN}://{USER}:{PASSWORD}@{HOST}:{PORT}/{NAME}"
     ECHO: bool = True
-    DROPS_AFTER_START: bool = True
+    DROPS_AFTER_START: bool = False
 
 
 class BackEndConfig(BaseModel):

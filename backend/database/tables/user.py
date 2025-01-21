@@ -28,10 +28,6 @@ class User(Base, TimestampMixin):
     name: Mapped[str] = mapped_column(nullable=False)
     surname: Mapped[str] = mapped_column(nullable=False)
     lastname: Mapped[str] = mapped_column(nullable=False)
-
-    email: Mapped[str] = mapped_column(nullable=False)
-    is_email_confirmed: Mapped[bool] = mapped_column(default=False, nullable=False)
-
     privilege: Mapped[int] = mapped_column(default=0, nullable=False)
 
     def __repr__(self):
