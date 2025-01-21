@@ -12,7 +12,7 @@ async def create_subject(session: AsyncSession = Depends(create_session), curren
     ...
 
 @router.get('')
-async def get_subjects(session: AsyncSession = Depends(create_session), current_user = Depends(get_current_user)):
+async def get_subject(session: AsyncSession = Depends(create_session), current_user = Depends(get_current_user)):
     ...
 
 @router.put('')

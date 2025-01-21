@@ -7,7 +7,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from backend.database.engine import global_init
-from backend.api import user_router, auth_router
+from backend.api import user_router, auth_router, student_router, subject_router
 
 
 @asynccontextmanager
@@ -19,6 +19,8 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title='Reporting System', version='0.0.1', lifespan=lifespan)
 app.include_router(user_router)
+app.include_router(student_router)
+app.include_router(subject_router)
 app.include_router(auth_router)
 app.add_middleware(
     CORSMiddleware,
