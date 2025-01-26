@@ -7,11 +7,20 @@ def get_bearer():
     response = client.post(
         "/api/oauth2/authorize",
         json={
-            "login": "string",
-            "password": "stringst"
+            "login": "admin1234",
+            "password": "admin1234"
         }
     )
-    return response.cookies['access_token']
+    return response.text, response.cookies['access_token']
+
+def get_users(token: str, users_id: int = None):
+    response = client.get(
+        "/api/user",
+        headers={
+            "Authorization": f"Bearer {token}"
+        }
+    )
+    return response
 
 def update_user(token: str):
     response = client.put(
@@ -21,16 +30,11 @@ def update_user(token: str):
         },
         json={
             "user_id": 4,
-            "name": "Станислав"
+            "name": "СтанислаV"
         }
     )
     return response.json()
 
-def test_read_main():
-    response = client.get("/")
-    assert response.status_code == 200
-    assert response.json() == {"Ping": "Pong"}
-
 if __name__ == '__main__':
-    bearer = get_bearer()
-    print(update_user(bearer))
+    user_id, bearer = get_bearer()
+    print(get_users(bearer))

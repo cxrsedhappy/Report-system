@@ -14,24 +14,24 @@ class UserSchema(BaseModel):
 
 
 class CreateUserSchema(BaseModel):
-    login: str = Field(..., min_length=4, max_length=20)
-    password: str = Field(..., min_length=8, max_length=20)
+    login: str = Field(..., min_length=4, max_length=50)
+    password: str = Field(..., min_length=8, max_length=50)
     name: str = Field(...)
     surname: str = Field(...)
     lastname: str = Field(...)
+    privilege: int = Field(...)
 
     class Config:
         from_attributes = True
 
 
-class UpdateUserSchema(BaseModel):
-    user_id: int = None
-    login: str = None
-    password: str = None
-    name: str = None
-    surname: str = None
-    lastname: str = None
-    privilege: int = None
+class UserParamSchema(BaseModel):
+    id: int
+    login: str | None
+    name: str | None
+    surname: str | None
+    lastname: str | None
+    privilege: int | None
 
     class Config:
         from_attributes = True

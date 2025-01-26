@@ -28,4 +28,5 @@ async def login(response: Response, creds: Credentials, session: AsyncSession = 
     payload = {"id": user.id, "login": user.login, "privilege": user.privilege}
     token = create_access_token(payload, timedelta(days=30))
     response.set_cookie(key="access_token", value=token, max_age=30 * 24 * 60 * 60)
+    print(token, Token(access_token=token, token_type="bearer"))
     return Token(access_token=token, token_type="bearer")
