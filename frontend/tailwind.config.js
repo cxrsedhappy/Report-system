@@ -6,6 +6,25 @@ export default {
   ],
   theme: {
     extend: {
+      transitionProperty: {
+        'all': 'all',
+        'opacity-transform': 'opacity, transform',
+      },
+      keyframes: {
+        slideIn: {
+          '0%': { transform: 'translateY(-20px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' }
+        },
+        slideOut: {
+          '0%': { transform: 'translateY(0)', opacity: '1' },
+          '100%': { transform: 'translateY(-20px)', opacity: '0' }
+        }
+      },
+      animation: {
+        'slide-in': 'slideIn 0.3s ease-out',
+        'slide-out': 'slideOut 0.3s ease-in'
+      },
+
       colors: {
         text: '#8794a1',
         accent: '#4db2ff',
