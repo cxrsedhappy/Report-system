@@ -48,7 +48,8 @@ class Group(Base, TimestampMixin):
     # При удалении группы студенты не удаляются
     students: Mapped[list[Student]] = relationship(
         back_populates="group",
-        passive_deletes=True
+        passive_deletes=True,
+        lazy='selectin'
     )
 
     def __str__(self):

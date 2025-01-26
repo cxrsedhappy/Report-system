@@ -1,3 +1,5 @@
+from pycparser.ply.yacc import token
+
 from main import app
 from fastapi.testclient import TestClient
 
@@ -35,6 +37,26 @@ def update_user(token: str):
     )
     return response.json()
 
+def create_group(name: str, token: str):
+    response = client.post(
+        "/api/group",
+        headers={
+            "Authorization": f"Bearer {token}"
+        },
+        json={
+            "name": f"{name}"
+        }
+    )
+    return response.json()
+
+def create_student(token: str):
+    ...
+
+def add_student_to_group(s_id: int, g_id: int, token: str):
+    ...
+
+
 if __name__ == '__main__':
-    user_id, bearer = get_bearer()
-    print(get_users(bearer))
+    bearer, token_model = get_bearer()
+    print(token_model.split()[0].strip())
+    print(create_group("ИКБО-05-21", token_model.split()[0].strip()))
