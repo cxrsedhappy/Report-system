@@ -123,30 +123,30 @@ const GenericTable = ({ config, FormComponent, apiEndpoint, defaultFormData, pag
         <div className="flex flex-col sm:flex-row justify-between items-center mb-4 space-y-4 sm:space-y-0">
           {/* Поле поиска */}
           <input
-            type="text"
-            placeholder="Поиск..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="p-2 bg-btn-default-bg rounded text-table-text w-full sm:w-1/3"
+              type="text"
+              placeholder="Поиск..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="p-2 bg-btn-default-bg rounded text-table-text w-full sm:w-1/3"
           />
 
           {/* Кнопки управления */}
           <div className="flex space-x-2">
             <button
-              onClick={handleSave}
-              className="p-2 bg-btn-default-bg text-table-text rounded hover:bg-btn-default-hover"
+                onClick={handleSave}
+                className="p-2 bg-btn-default-bg text-table-text rounded hover:bg-btn-default-hover"
             >
               Подтвердить
             </button>
             <button
-              onClick={handleDelete}
-              className="p-2 bg-btn-default-bg text-table-text rounded hover:bg-btn-default-hover"
+                onClick={handleDelete}
+                className="p-2 bg-btn-default-bg text-table-text rounded hover:bg-btn-default-hover"
             >
               Удалить
             </button>
             <button
-              onClick={() => setFormOpen(true)}
-              className="p-2 bg-btn-primary-bg text-btn-primary rounded hover:bg-btn-primary-hover"
+                onClick={() => setFormOpen(true)}
+                className="p-2 bg-btn-primary-bg text-btn-primary rounded hover:bg-btn-primary-hover"
             >
               Добавить
             </button>
@@ -155,14 +155,14 @@ const GenericTable = ({ config, FormComponent, apiEndpoint, defaultFormData, pag
 
         {/* Форма для добавления записи */}
         {isFormOpen && (
-          <FormComponent
-            onClose={() => setFormOpen(false)}
-            onDataAdded={handleDataAdded}
-            defaultData={defaultFormData}
-            apiEndpoint={apiEndpoint}
-            formTitle={pageTitle}
-            fieldsConfig={fieldsConfig}
-          />
+            <FormComponent
+                onClose={() => setFormOpen(false)}
+                onDataAdded={handleDataAdded}
+                defaultData={defaultFormData}
+                apiEndpoint={apiEndpoint}
+                formTitle={pageTitle}
+                fieldsConfig={fieldsConfig}
+            />
         )}
 
         {/* Пагинация */}
@@ -172,9 +172,9 @@ const GenericTable = ({ config, FormComponent, apiEndpoint, defaultFormData, pag
             <label className="text-table-text">
               Записей на странице:
               <select
-                value={itemsPerPage}
-                onChange={handleItemsPerPageChange}
-                className="ml-2 p-1 bg-btn-default-bg rounded"
+                  value={itemsPerPage}
+                  onChange={handleItemsPerPageChange}
+                  className="ml-2 p-1 bg-btn-default-bg rounded"
               >
                 <option value={5}>5</option>
                 <option value={10}>10</option>
@@ -187,9 +187,9 @@ const GenericTable = ({ config, FormComponent, apiEndpoint, defaultFormData, pag
           {/* Навигация по страницам */}
           <div className="flex items-center space-x-2">
             <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className="p-2 bg-btn-default-bg text-table-text rounded hover:bg-btn-default-hover"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="p-2 bg-btn-default-bg text-table-text rounded hover:bg-btn-default-hover"
             >
               Назад
             </button>
@@ -197,9 +197,9 @@ const GenericTable = ({ config, FormComponent, apiEndpoint, defaultFormData, pag
               Страница {currentPage} из {totalPages}
             </span>
             <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className="p-2 bg-btn-default-bg text-table-text rounded hover:bg-btn-default-hover"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="p-2 bg-btn-default-bg text-table-text rounded hover:bg-btn-default-hover"
             >
               Вперед
             </button>
@@ -209,74 +209,76 @@ const GenericTable = ({ config, FormComponent, apiEndpoint, defaultFormData, pag
         {/* Таблица */}
         <table className="table-auto bg-table-bg w-full text-left text-text">
           <thead className="bg-table-hover">
-            <tr>
-              <th className="h-12">
-                <div className="w-10 flex items-center">
-                  <input
+          <tr>
+            <th className="h-12" style={{width: "10px"}}> {/* Ширина для колонки с чекбоксом */}
+              <div className="w-10 flex items-center">
+                <input
                     className="m-auto"
                     type="checkbox"
                     onChange={(e) =>
-                      setSelectedRows(
-                        e.target.checked
-                          ? new Set(data.map((row) => row.id))
-                          : new Set()
-                      )
+                        setSelectedRows(
+                            e.target.checked
+                                ? new Set(data.map((row) => row.id))
+                                : new Set()
+                        )
                     }
                     checked={selectedRows.size === data.length}
-                  />
-                </div>
-              </th>
-              {config.columns.map((column) => (
-                <th key={column.key} className="h-6">
+                />
+              </div>
+            </th>
+            {config.columns.map((column) => (
+                <th key={column.key} className="h-6"
+                    style={{width: column.width}}> {/* Используем width из конфигурации */}
                   {column.title}
                 </th>
-              ))}
-            </tr>
+            ))}
+          </tr>
           </thead>
           <tbody>
-            {currentItems.map((row) => (
+          {currentItems.map((row) => (
               <tr
-                key={row.id}
-                className={selectedRows.has(row.id) ? "bg-selected" : ""}
+                  key={row.id}
+                  className={selectedRows.has(row.id) ? "bg-selected" : ""}
               >
-                <td className="border-0">
+                <td className="border-0" style={{width: "50px"}}> {/* Ширина для колонки с чекбоксом */}
                   <div className="w-10 flex items-center">
                     <input
-                      type="checkbox"
-                      className="m-auto accent-bg-hover hover:accent-pink-500"
-                      checked={selectedRows.has(row.id)}
-                      onChange={(e) => {
-                        const newSet = new Set(selectedRows);
-                        if (e.target.checked) {
-                          newSet.add(row.id);
-                        } else {
-                          newSet.delete(row.id);
-                        }
-                        setSelectedRows(newSet);
-                      }}
+                        type="checkbox"
+                        className="m-auto accent-bg-hover hover:accent-pink-500"
+                        checked={selectedRows.has(row.id)}
+                        onChange={(e) => {
+                          const newSet = new Set(selectedRows);
+                          if (e.target.checked) {
+                            newSet.add(row.id);
+                          } else {
+                            newSet.delete(row.id);
+                          }
+                          setSelectedRows(newSet);
+                        }}
                     />
                   </div>
                 </td>
                 {config.columns.map((column) => (
-                  <td key={column.key} className="">
-                    <input
-                      type={column.inputType || "text"}
-                      value={
-                        editedData[row.id]?.[column.key] !== undefined
-                          ? editedData[row.id][column.key]
-                          : row[column.key]
-                      }
-                      onChange={(e) =>
-                        handleEdit(row.id, column.key, e.target.value)
-                      }
-                      className={`bg-table-bg p-1 w-full text-left ${
-                        editedData[row.id]?.[column.key] ? "bg-yellow-100" : ""
-                      }`}
-                    />
-                  </td>
+                    <td key={column.key} className=""
+                        style={{width: column.width}}> {/* Используем width из конфигурации */}
+                      <input
+                          type={column.inputType || "text"}
+                          value={
+                            editedData[row.id]?.[column.key] !== undefined
+                                ? editedData[row.id][column.key]
+                                : row[column.key]
+                          }
+                          onChange={(e) =>
+                              handleEdit(row.id, column.key, e.target.value)
+                          }
+                          className={`bg-table-bg p-1 w-full text-left ${
+                              editedData[row.id]?.[column.key] ? "bg-yellow-100" : ""
+                          }`}
+                      />
+                    </td>
                 ))}
               </tr>
-            ))}
+          ))}
           </tbody>
         </table>
       </div>

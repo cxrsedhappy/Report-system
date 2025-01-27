@@ -5,13 +5,13 @@ import Form from "../components/Form.jsx";
 
 const usersConfig = {
   columns: [
-    { key: "id", title: "ID" },
-    { key: "login", title: "Логин" },
-    { key: "name", title: "Имя" },
-    { key: "surname", title: "Фамилия" },
-    { key: "lastname", title: "Отчество" },
-    { key: "privilege", title: "Привилегия", inputType: "number" }
-  ]
+    { key: "id", title: "ID", width: "10px" }, // Пример ширины для колонки ID
+    { key: "login", title: "Логин", width: "150px" }, // Пример ширины для колонки Логин
+    { key: "name", title: "Имя", width: "120px" }, // Пример ширины для колонки Имя
+    { key: "surname", title: "Фамилия", width: "120px" }, // Пример ширины для колонки Фамилия
+    { key: "lastname", title: "Отчество", width: "120px" }, // Пример ширины для колонки Отчество
+    { key: "privilege", title: "Привилегия", inputType: "number", width: "100px" }, // Пример ширины для колонки Привилегия
+  ],
 };
 
 const defaultUserData = {
