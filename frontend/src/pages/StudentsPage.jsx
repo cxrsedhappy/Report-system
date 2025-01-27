@@ -1,18 +1,30 @@
-// pages/StudentsPage.jsx
+// StudentsTable.jsx
+import React from "react";
+import GenericTable from "../components/GenericTable";
+import UserForm from "../components/UserForm.jsx";
 
-const StudentsPage = () => {
-  const columns = [
-    { field: 'id', header: 'ID', width: '100px' },
-    { field: 'fullName', header: 'ФИО' },
-    { field: 'group', header: 'Группа' },
-    { field: 'status', header: 'Статус' }
-  ];
-
-  return (
-    <div className="p-4">
-      <h1 className="text-3xl font-semibold text-text mb-8">Студенты</h1>
-    </div>
-  );
+const studentsConfig = {
+  columns: [
+    { key: "full_name", title: "ФИО" },
+    { key: "group", title: "Группа" },
+    { key: "course", title: "Курс", inputType: "number" }
+  ]
 };
 
-export default StudentsPage;
+const defaultStudentData = {
+  full_name: "",
+  group: "",
+  course: 1
+};
+
+const StudentsTable = () => (
+  <GenericTable
+    config={studentsConfig}
+    FormComponent={UserForm}
+    apiEndpoint="http://localhost:8000/api/students"
+    defaultFormData={defaultStudentData}
+    pageTitle="Студенты"
+  />
+);
+
+export default StudentsTable;

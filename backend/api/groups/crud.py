@@ -15,8 +15,8 @@ from backend.database.tables import Group, Student
 # 0 - Гости
 
 async def create_group(group: CreateGroupModel, session: AsyncSession, current_user) -> GroupModel:
-    # if current_user.get('privilege') == 0:
-    #     raise HTTPException(403, detail="You don't have rights to create group")
+    if current_user.get('privilege') == 0:
+        raise HTTPException(403, detail="You don't have rights to create group")
 
     new_group = Group(name=group.name)
     session.add(new_group)
@@ -27,8 +27,8 @@ async def create_group(group: CreateGroupModel, session: AsyncSession, current_u
 
 
 async def get_group(group_id: int | None, session: AsyncSession, current_user) -> list[GroupModel]:
-    # if current_user.get('privilege') == 0:
-    #     raise HTTPException(403, detail="You don't have rights to get student")
+    if current_user.get('privilege') == 0:
+        raise HTTPException(403, detail="You don't have rights to get student")
 
     if group_id is None:
         statement = select(Group).order_by(Group.id)
@@ -41,8 +41,8 @@ async def get_group(group_id: int | None, session: AsyncSession, current_user) -
 
 
 async def add_student_to_group(student_id: int, group_id: int, session: AsyncSession, current_user) -> bool:
-    # if current_user.get('privilege') == 0:
-    #     raise HTTPException(403, detail="You don't have rights to get student")
+    if current_user.get('privilege') == 0:
+        raise HTTPException(403, detail="You don't have rights to get student")
 
     group = await session.get(Group, group_id)
     student = await session.get(Student, student_id)
@@ -52,13 +52,13 @@ async def add_student_to_group(student_id: int, group_id: int, session: AsyncSes
     return True
 
 
-async def update_student():
+async def update_group():
     ...
 
 
-async def delete_student(group_ids: list[int], session: AsyncSession, current_user) -> bool:
-    # if current_user.get('privilege') == 0:
-    #     raise HTTPException(403, detail="You don't have rights to delete student")
+async def delete_group(group_ids: list[int], session: AsyncSession, current_user) -> bool:
+    if current_user.get('privilege') == 0:
+        raise HTTPException(403, detail="You don't have rights to delete student")
 
     await session.execute(delete(Group).where(Group.id.in_(group_ids)))
     await session.commit()

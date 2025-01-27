@@ -29,7 +29,7 @@ async def get_users_by_id(
 
 @router.put('')
 async def update_user(
-        updated_users: list[UserParamSchema],
+        updated_users: list[UserParamSchema] = None,
         session: AsyncSession = Depends(create_session),
         current_user = Depends(get_current_user)
 ):

@@ -42,7 +42,11 @@ async def get_users_by_id(user_id: int, session: AsyncSession) -> list[UserSchem
     return [UserSchema.model_validate(user) for user in users]
 
 
-async def update_user(updated_users: list[UserParamSchema], session: AsyncSession, current_user: dict):
+async def update_user(
+        updated_users: list[UserParamSchema],
+        session: AsyncSession,
+        current_user: dict
+):
     for user in updated_users:
 
         user_id = user.id

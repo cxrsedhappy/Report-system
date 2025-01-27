@@ -1,15 +1,37 @@
+// UsersTable.jsx
 import React from "react";
-import Table from "../components/Table";
+import GenericTable from "../components/GenericTable";
+import UserForm from "../components/UserForm.jsx";
 
-const UsersPage = () => {
-  return (
-    <div>
-      <div className="m-auto max-w-2xl mt-16">
-        <h1 className="text-text text-3xl mb-4 text-center">Пользователи</h1>
-      </div>
-      <Table />
-    </div>
-  );
+const usersConfig = {
+  columns: [
+    { key: "id", title: "ID" },
+    { key: "login", title: "Логин" },
+    { key: "name", title: "Имя" },
+    { key: "surname", title: "Фамилия" },
+    { key: "lastname", title: "Отчество" },
+    { key: "privilege", title: "Привилегия", inputType: "number" }
+  ]
 };
 
-export default UsersPage;
+const defaultUserData = {
+  id: "",
+  login: "",
+  password: "",
+  name: "",
+  surname: "",
+  lastname: "",
+  privilege: 0
+};
+
+const UsersTable = () => (
+  <GenericTable
+    config={usersConfig}
+    FormComponent={UserForm}
+    apiEndpoint="http://localhost:8000/api/user"
+    defaultFormData={defaultUserData}
+    pageTitle="Пользователи"
+  />
+);
+
+export default UsersTable;

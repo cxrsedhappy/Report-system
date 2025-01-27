@@ -13,7 +13,7 @@ router = APIRouter(prefix='/api/group', tags=['Groups'])
 async def create_group(
         new_group: CreateGroupModel,
         session: AsyncSession = Depends(create_session),
-        current_user = 2
+        current_user = Depends(get_current_user)
 ):
     return await crud.create_group(new_group, session, current_user)
 
@@ -22,7 +22,7 @@ async def add_student_to_group(
         student_id: int,
         group_id: int,
         session: AsyncSession = Depends(create_session),
-        current_user = 2
+        current_user = Depends(get_current_user)
 ):
     return await crud.add_student_to_group(student_id, group_id, session, current_user)
 
@@ -30,14 +30,21 @@ async def add_student_to_group(
 async def get_group(
         group_ids: int | None,
         session: AsyncSession = Depends(create_session),
-        current_user = 2
-):
+        current_user = Depends(get_current_user)):
     return await crud.get_group(group_ids, session, current_user)
 
 @router.put('')
-async def update_group(groups: list[GroupModel], session: AsyncSession = Depends(create_session), current_user = Depends(get_current_user)):
+async def update_group(
+        groups: list[GroupModel],
+        session: AsyncSession = Depends(create_session),
+        current_user = Depends(get_current_user)
+):
     return await crud.update_group(groups, session, current_user)
 
 @router.delete('')
-async def delete_group(group_ids: list[int], session: AsyncSession = Depends(create_session), current_user = Depends(get_current_user)):
+async def delete_group(
+        group_ids: list[int],
+        session: AsyncSession = Depends(create_session),
+        current_user = Depends(get_current_user)
+):
     return await crud.delete_group(group_ids, session, current_user)

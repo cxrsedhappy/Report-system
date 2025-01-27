@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel, Field
 
 
@@ -27,11 +29,11 @@ class CreateUserSchema(BaseModel):
 
 class UserParamSchema(BaseModel):
     id: int
-    login: str | None
-    name: str | None
-    surname: str | None
-    lastname: str | None
-    privilege: int | None
+    login: Optional[str] = None
+    name: Optional[str] = None
+    surname: Optional[str] = None
+    lastname: Optional[str] = None
+    privilege: Optional[int] = None
 
     class Config:
         from_attributes = True

@@ -1,12 +1,8 @@
-import random
-import string
-
 from fastapi import HTTPException
 
 from sqlalchemy import select, update, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.api.auth.auth import get_password_hash
 from backend.api.student.models import StudentModel, CreateStudentModel
 from backend.database.tables import User, Student
 
@@ -15,8 +11,8 @@ from backend.database.tables import User, Student
 # 0 - Гости
 
 async def create_student(student: CreateStudentModel, session: AsyncSession, current_user) -> StudentModel:
-    # if current_user.get('privilege') == 0:
-    #     raise HTTPException(403, detail="You don't have rights to create student")
+    if current_user.get('privilege') == 0:
+        raise HTTPException(403, detail="You don't have rights to create student")
 
     new_student = Student(
         educational_id=student.educational_id,
@@ -33,8 +29,8 @@ async def create_student(student: CreateStudentModel, session: AsyncSession, cur
 
 
 async def get_student(student_id: int | None, session: AsyncSession, current_user) -> list[StudentModel]:
-    # if current_user.get('privilege') == 0:
-    #     raise HTTPException(403, detail="You don't have rights to get student")
+    if current_user.get('privilege') == 0:
+        raise HTTPException(403, detail="You don't have rights to get student")
 
     if student_id is None:
         statement = select(Student).order_by(Student.id)
@@ -43,6 +39,7 @@ async def get_student(student_id: int | None, session: AsyncSession, current_use
 
     result = await session.execute(statement)
     students = result.scalars().all()
+    print(students)
     return [StudentModel.model_validate(student) for student in students]
 
 
@@ -51,8 +48,8 @@ async def update_student():
 
 
 async def delete_student(student_ids: list[int], session: AsyncSession, current_user) -> bool:
-    # if current_user.get('privilege') == 0:
-    #     raise HTTPException(403, detail="You don't have rights to delete student")
+    if current_user.get('privilege') == 0:
+        raise HTTPException(403, detail="You don't have rights to delete student")
 
     statement = delete(Student).where(Student.id.in_(student_ids))
     await session.execute(statement)

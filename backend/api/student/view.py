@@ -13,7 +13,7 @@ router = APIRouter(prefix='/api/student', tags=['Student'])
 async def create_student(
         student: CreateStudentModel,
         session: AsyncSession = Depends(create_session),
-        current_user = 2
+        current_user = Depends(get_current_user)
 ):
     return await crud.create_student(student, session, current_user)
 
@@ -21,18 +21,21 @@ async def create_student(
 async def get_student(
         student_id: int = None,
         session: AsyncSession = Depends(create_session),
-        current_user = 2
+        current_user = Depends(get_current_user)
 ):
     return await crud.get_student(student_id, session, current_user)
 
 @router.put('')
-async def update_student(session: AsyncSession = Depends(create_session), current_user = Depends(get_current_user)):
+async def update_student(
+        session: AsyncSession = Depends(create_session),
+        current_user = Depends(get_current_user)
+):
     ...
 
 @router.delete('')
 async def delete_student(
         student_id: list[int],
         session: AsyncSession = Depends(create_session),
-        current_user = 2
+        current_user = Depends(get_current_user)
 ):
     return await crud.delete_student(student_id, session, current_user)
