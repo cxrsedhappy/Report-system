@@ -1,9 +1,8 @@
-// UserForm.jsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const UserForm = ({ onClose, onDataAdded, defaultData }) => {
+const Form = ({ onClose, onDataAdded, defaultData, apiEndpoint, formTitle, fieldsConfig }) => {
   const [formData, setFormData] = useState(defaultData);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -27,7 +26,7 @@ const UserForm = ({ onClose, onDataAdded, defaultData }) => {
     e.preventDefault();
     try {
       const token = Cookies.get("access_token");
-      await axios.post("http://localhost:8000/api/user", formData, {
+      await axios.post(apiEndpoint, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -36,7 +35,7 @@ const UserForm = ({ onClose, onDataAdded, defaultData }) => {
       handleClose();
     } catch (err) {
       console.error(err);
-      alert("Ошибка при добавлении пользователя.");
+      alert("Ошибка при добавлении данных.");
     }
   };
 
@@ -51,20 +50,21 @@ const UserForm = ({ onClose, onDataAdded, defaultData }) => {
           transition-all duration-300 transform
           ${isVisible ? "translate-y-0" : "translate-y-[-20px]"}`}
       >
-        <h2 className="text-text text-xl mb-4">Добавить пользователя</h2>
+        <h2 className="text-text text-xl mb-4">{formTitle}</h2>
         <form onSubmit={handleSubmit}>
           <div className="space-y-4">
-            {Object.entries(defaultData).map(([key, value]) => (
-              <input
-                key={key}
-                type={key === "password" ? "password" : "text"}
-                name={key}
-                placeholder={key}
-                value={formData[key]}
-                onChange={handleChange}
-                className="w-full p-2 bg-field-bg text-text rounded"
-                required={key === "login" || key === "password"}
-              />
+            {fieldsConfig.map((field) => (
+              <div key={field.key}>
+                <input
+                  type={field.inputType || "text"}
+                  name={field.key}
+                  placeholder={field.title}
+                  value={formData[field.key] || ""}
+                  onChange={handleChange}
+                  className="w-full p-2 bg-field-bg text-text rounded"
+                  required={field.required || false}
+                />
+              </div>
             ))}
           </div>
           <div className="flex justify-end mt-6 space-x-2">
@@ -88,4 +88,4 @@ const UserForm = ({ onClose, onDataAdded, defaultData }) => {
   );
 };
 
-export default UserForm;
+export default Form;

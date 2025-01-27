@@ -3,19 +3,15 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import LoadingBar from "./LoadingBar.jsx";
 
-const GenericTable = ({
-  config,
-  FormComponent,
-  apiEndpoint,
-  defaultFormData,
-  pageTitle
-}) => {
+const GenericTable = ({ config, FormComponent, apiEndpoint, defaultFormData, pageTitle, fieldsConfig }) => {
   const [data, setData] = useState([]);
   const [editedData, setEditedData] = useState({});
   const [selectedRows, setSelectedRows] = useState(new Set());
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setLoading] = useState(false);
   const [isFormOpen, setFormOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
 
   const fetchData = async () => {
     setLoading(true);
@@ -50,23 +46,18 @@ const GenericTable = ({
   };
 
   const handleSave = async () => {
+    setLoading(true);
     const updates = Object.entries(editedData).map(([id, changes]) => ({
       id: parseInt(id),
-      ...changes
+      ...changes,
     }));
-
-    setLoading(true);
     try {
       const token = Cookies.get("access_token");
-      await axios.put(
-        `${apiEndpoint}`,
-        updates,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.put(`${apiEndpoint}`, updates, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setEditedData({});
       await fetchData();
     } catch (err) {
@@ -105,18 +96,41 @@ const GenericTable = ({
     )
   );
 
+  // Pagination logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const handleItemsPerPageChange = (e) => {
+    setItemsPerPage(Number(e.target.value));
+    setCurrentPage(1); // Reset to first page when changing items per page
+  };
+
   return (
     <div className="p-4">
       <LoadingBar isLoading={isLoading} />
       <div className="max-w-5xl mx-auto mt-16">
-        <div className="flex justify-between mb-4">
+        {/* Заголовок страницы */}
+        <h1 className="text-text text-3xl text-center mb-6">{pageTitle}</h1>
+
+        {/* Панель управления (поиск, кнопки) */}
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-4 space-y-4 sm:space-y-0">
+          {/* Поле поиска */}
           <input
             type="text"
             placeholder="Поиск..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="p-2 bg-btn-default-bg rounded text-table-text w-1/3"
+            className="p-2 bg-btn-default-bg rounded text-table-text w-full sm:w-1/3"
           />
+
+          {/* Кнопки управления */}
           <div className="flex space-x-2">
             <button
               onClick={handleSave}
@@ -132,22 +146,67 @@ const GenericTable = ({
             </button>
             <button
               onClick={() => setFormOpen(true)}
-              className="p-2 bg-btn-primary-bg text-btn-primary rounded hover:bg-btn-primary-hover flex items-center space-x-2"
+              className="p-2 bg-btn-primary-bg text-btn-primary rounded hover:bg-btn-primary-hover"
             >
-              <span>Добавить</span>
+              Добавить
             </button>
           </div>
         </div>
+
+        {/* Форма для добавления записи */}
         {isFormOpen && (
           <FormComponent
             onClose={() => setFormOpen(false)}
             onDataAdded={handleDataAdded}
             defaultData={defaultFormData}
+            apiEndpoint={apiEndpoint}
+            formTitle={pageTitle}
+            fieldsConfig={fieldsConfig}
           />
         )}
-        <div className="mb-4">
-          <h1 className="text-text text-3xl text-center">{pageTitle}</h1>
+
+        {/* Пагинация */}
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-4 space-y-4 sm:space-y-0">
+          {/* Выбор количества записей на странице */}
+          <div className="flex items-center">
+            <label className="text-table-text">
+              Записей на странице:
+              <select
+                value={itemsPerPage}
+                onChange={handleItemsPerPageChange}
+                className="ml-2 p-1 bg-btn-default-bg rounded"
+              >
+                <option value={5}>5</option>
+                <option value={10}>10</option>
+                <option value={15}>15</option>
+                <option value={20}>20</option>
+              </select>
+            </label>
+          </div>
+
+          {/* Навигация по страницам */}
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="p-2 bg-btn-default-bg text-table-text rounded hover:bg-btn-default-hover"
+            >
+              Назад
+            </button>
+            <span className="text-table-text">
+              Страница {currentPage} из {totalPages}
+            </span>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="p-2 bg-btn-default-bg text-table-text rounded hover:bg-btn-default-hover"
+            >
+              Вперед
+            </button>
+          </div>
         </div>
+
+        {/* Таблица */}
         <table className="table-auto bg-table-bg w-full text-left text-text">
           <thead className="bg-table-hover">
             <tr>
@@ -175,7 +234,7 @@ const GenericTable = ({
             </tr>
           </thead>
           <tbody>
-            {filteredData.map((row) => (
+            {currentItems.map((row) => (
               <tr
                 key={row.id}
                 className={selectedRows.has(row.id) ? "bg-selected" : ""}

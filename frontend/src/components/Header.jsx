@@ -37,6 +37,9 @@ const Header = () => {
             <Link to="/students" className="hover:text-accent transition duration-200">
                 Учащиеся
             </Link>
+            <Link to="/groups" className="hover:text-accent transition duration-200">
+                Группы
+            </Link>
         </nav>
 
         {/* Account */}

@@ -1,7 +1,7 @@
 // UsersTable.jsx
 import React from "react";
 import GenericTable from "../components/GenericTable";
-import UserForm from "../components/UserForm.jsx";
+import Form from "../components/Form.jsx";
 
 const usersConfig = {
   columns: [
@@ -15,22 +15,31 @@ const usersConfig = {
 };
 
 const defaultUserData = {
-  id: "",
   login: "",
   password: "",
   name: "",
   surname: "",
   lastname: "",
-  privilege: 0
+  privilege: ""
 };
+
+const userFieldsConfig = [
+  { key: "login", title: "Логин", required: true },
+  { key: "password", title: "Пароль", inputType: "password", required: true },
+  { key: "name", title: "Имя", required: true},
+  { key: "surname", title: "Фамилия", required: true },
+  { key: "lastname", title: "Отчество" },
+  { key: "privilege", title: "Привилегия", inputType: "number"},
+];
 
 const UsersTable = () => (
   <GenericTable
     config={usersConfig}
-    FormComponent={UserForm}
+    FormComponent={Form}
     apiEndpoint="http://localhost:8000/api/user"
     defaultFormData={defaultUserData}
     pageTitle="Пользователи"
+    fieldsConfig={userFieldsConfig} // Передаем fieldsConfig
   />
 );
 

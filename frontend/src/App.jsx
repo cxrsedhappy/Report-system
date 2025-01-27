@@ -10,6 +10,7 @@ import UsersPage from "./pages/UsersPage";
 import PerformancePage from "./pages/PerformancePage";
 import DiplomasPage from "./pages/DiplomasPage";
 import StudentsPage from "./pages/StudentsPage";
+import GroupsPage from "./pages/GroupsPage.jsx";
 
 const validateToken = (token) => {
   try {
@@ -52,6 +53,7 @@ const App = () => {
             <Route path="/performance" element={<PerformancePage />} />
             <Route path="/diplomas" element={<DiplomasPage />} />
             <Route path="/students" element={<StudentsPage />} />
+            <Route path="/Groups" element={<GroupsPage />} />
             <Route path="*" element={<Navigate to="/users" />} />
           </Routes>
         </>

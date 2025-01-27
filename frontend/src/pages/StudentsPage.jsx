@@ -1,30 +1,47 @@
 // StudentsTable.jsx
 import React from "react";
 import GenericTable from "../components/GenericTable";
-import UserForm from "../components/UserForm.jsx";
+import Form from "../components/Form.jsx";
 
 const studentsConfig = {
   columns: [
-    { key: "full_name", title: "ФИО" },
-    { key: "group", title: "Группа" },
-    { key: "course", title: "Курс", inputType: "number" }
+    { key: "id", title: "ID" },
+    { key: "educational_id", title: "Код Студента" },
+    { key: "group", title: "Группа"},
+    { key: "surname", title: "Фамилия" },
+    { key: "name", title: "Имя" },
+    { key: "lastname", title: "Отчество" },
+    { key: "entrance", title: "Пропуск" },
+    { key: "diploma", title: "Диплом" },
+    { key: "exams", title: "Экзамены" },
   ]
 };
 
 const defaultStudentData = {
-  full_name: "",
-  group: "",
-  course: 1
+  educational_id: "",
+  name: "",
+  surname: "",
+  lastname: "",
+  entrance: 1
 };
 
-const StudentsTable = () => (
+const studentFieldsConfig = [
+  { key: "educational_id", title: "Код Студента", required: true },
+  { key: "surname", title: "Фамилия" },
+  { key: "name", title: "Имя" },
+  { key: "lastname", title: "Отчество" },
+  { key: "entrance", title: "Пропуск", inputType: "number" },
+];
+
+const StudentsPage = () => (
   <GenericTable
     config={studentsConfig}
-    FormComponent={UserForm}
-    apiEndpoint="http://localhost:8000/api/students"
+    FormComponent={Form}
+    apiEndpoint="http://localhost:8000/api/student"
     defaultFormData={defaultStudentData}
     pageTitle="Студенты"
+    fieldsConfig={studentFieldsConfig} // Передаем fieldsConfig
   />
 );
 
-export default StudentsTable;
+export default StudentsPage;
