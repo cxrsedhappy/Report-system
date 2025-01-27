@@ -4,11 +4,12 @@ from datetime import datetime
 
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import mapped_column, Mapped, relationship
+from sqlalchemy_serializer import SerializerMixin
 
 from backend.database.tables import Base
 from backend.database.tables.mixins import TimestampMixin
 
-class Student(Base, TimestampMixin):
+class Student(Base, TimestampMixin, SerializerMixin):
     __tablename__ = 'students'
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
 
@@ -25,22 +26,23 @@ class Student(Base, TimestampMixin):
         ForeignKey('groups.id', ondelete="SET NULL", name="FK_student_group"),
         nullable=True
     )
-    group: Mapped[Group] = relationship(back_populates='students')
+    group: Mapped[Group] = relationship(back_populates='students', lazy='selectin')
 
     # При удалении студента диплом удаляется
-    diploma: Mapped[Diploma] = relationship(back_populates='student', cascade="all, delete")
+    diploma: Mapped[Diploma] = relationship(back_populates='student', cascade="all, delete", lazy='selectin')
 
     # При удалении студента экзамены удаляются
     exams: Mapped[list[Exam]] = relationship(
         back_populates='student',
-        cascade="all, delete-orphan"
+        cascade="all, delete-orphan",
+        lazy='selectin'
     )
 
     def __str__(self):
         return f"<Student id={self.id} name={self.name}>"
 
 
-class Group(Base, TimestampMixin):
+class Group(Base, TimestampMixin, SerializerMixin):
     __tablename__ = 'groups'
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(default="", nullable=False)
@@ -56,7 +58,7 @@ class Group(Base, TimestampMixin):
         return f"<Group id={self.id} name={self.name}>"
 
 
-class Diploma(Base, TimestampMixin):
+class Diploma(Base, TimestampMixin, SerializerMixin):
     __tablename__ = 'diplomas'
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
 
@@ -64,7 +66,7 @@ class Diploma(Base, TimestampMixin):
         ForeignKey('students.id', ondelete="CASCADE", name='FK_diploma_student'),
         nullable=True
     )
-    student: Mapped[Student] = relationship(back_populates='diploma')
+    student: Mapped[Student] = relationship(back_populates='diploma', lazy='selectin')
 
     assignment: Mapped[str] = mapped_column(default="", nullable=True)
     title: Mapped[bool] = mapped_column(default=False, nullable=True)
@@ -76,7 +78,7 @@ class Diploma(Base, TimestampMixin):
         return f"Diploma id={self.id} assignment={self.assignment} title={self.title}"
 
 
-class Exam(Base, TimestampMixin):
+class Exam(Base, TimestampMixin, SerializerMixin):
     __tablename__ = 'exams'
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
 
@@ -84,7 +86,7 @@ class Exam(Base, TimestampMixin):
         ForeignKey('students.id', ondelete="CASCADE", name='FK_exam_student'),
         nullable=True
     )
-    student: Mapped[Student] = relationship(back_populates='exams')
+    student: Mapped[Student] = relationship(back_populates='exams', lazy='selectin')
 
     subject_id: Mapped[int] = mapped_column(
         ForeignKey('subjects.id', ondelete="CASCADE", name='FK_exam_subject'),
@@ -99,7 +101,7 @@ class Exam(Base, TimestampMixin):
         return f"Exam id={self.id} subject={self.subject_id} score={self.score}"
 
 
-class Subject(Base, TimestampMixin):
+class Subject(Base, TimestampMixin, SerializerMixin):
     __tablename__ = 'subjects'
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(default="", nullable=False)

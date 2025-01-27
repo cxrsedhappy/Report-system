@@ -3,7 +3,7 @@ import string
 
 from fastapi import HTTPException
 
-from sqlalchemy import select, update, delete
+from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.api.groups.models import CreateGroupModel, GroupModel
@@ -20,7 +20,6 @@ async def create_group(group: CreateGroupModel, session: AsyncSession, current_u
 
     new_group = Group(name=group.name)
     session.add(new_group)
-    print(session.is_active)
     await session.commit()
     await session.refresh(new_group)
     return GroupModel.model_validate(new_group)
@@ -46,20 +45,23 @@ async def add_student_to_group(student_id: int, group_id: int, session: AsyncSes
 
     group = await session.get(Group, group_id)
     student = await session.get(Student, student_id)
-    print(group, '\n', student)
     group.students.append(student)
     await session.commit()
     return True
 
 
-async def update_group():
+async def update_group(
+        groups: list[GroupModel],
+        session,
+        current_user
+):
     ...
 
 
-async def delete_group(group_ids: list[int], session: AsyncSession, current_user) -> bool:
+async def delete_group(group_ids: list[int], session: AsyncSession, current_user):
     if current_user.get('privilege') == 0:
         raise HTTPException(403, detail="You don't have rights to delete student")
 
     await session.execute(delete(Group).where(Group.id.in_(group_ids)))
     await session.commit()
-    return True
+    return {"status": "success"}
