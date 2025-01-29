@@ -5,6 +5,7 @@ from fastapi import HTTPException
 
 from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from backend.api.groups.models import CreateGroupModel, GroupModel
 from backend.database.tables import Group, Student
@@ -25,18 +26,18 @@ async def create_group(group: CreateGroupModel, session: AsyncSession, current_u
     return GroupModel.model_validate(new_group)
 
 
-async def get_group(group_id: int | None, session: AsyncSession, current_user) -> list[GroupModel]:
+async def get_group(group_id: int | None, session: AsyncSession, current_user):
     if current_user.get('privilege') == 0:
         raise HTTPException(403, detail="You don't have rights to get student")
 
     if group_id is None:
-        statement = select(Group).order_by(Group.id)
+        statement = select(Group).options(selectinload(Group.students)).order_by(Group.id)
     else:
-        statement = select(Group).where(Group.id == group_id).order_by(Group.id)
+        statement = select(Group).where(Group.id == group_id).options(selectinload(Group.students)).order_by(Group.id)
 
     result = await session.execute(statement)
     groups = result.scalars().all()
-    return [GroupModel.model_validate(group) for group in groups]
+    return [groups]
 
 
 async def add_student_to_group(student_id: int, group_id: int, session: AsyncSession, current_user) -> bool:
@@ -44,7 +45,15 @@ async def add_student_to_group(student_id: int, group_id: int, session: AsyncSes
         raise HTTPException(403, detail="You don't have rights to get student")
 
     group = await session.get(Group, group_id)
+
+    if not group:
+        raise HTTPException(404, detail=f"Group with {group_id} not found")
+
     student = await session.get(Student, student_id)
+
+    if not group:
+        raise HTTPException(404, detail=f"Student with {student_id} not found")
+
     group.students.append(student)
     await session.commit()
     return True

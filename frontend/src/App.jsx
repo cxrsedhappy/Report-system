@@ -49,11 +49,11 @@ const App = () => {
         <>
           <Header />
           <Routes>
+            <Route path="/groups" element={<GroupsPage />} />
             <Route path="/users" element={<UsersPage />} />
             <Route path="/performance" element={<PerformancePage />} />
             <Route path="/diplomas" element={<DiplomasPage />} />
             <Route path="/students" element={<StudentsPage />} />
-            <Route path="/Groups" element={<GroupsPage />} />
             <Route path="*" element={<Navigate to="/users" />} />
           </Routes>
         </>

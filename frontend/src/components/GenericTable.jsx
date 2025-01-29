@@ -1,10 +1,18 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import LoadingBar from "./LoadingBar.jsx";
 
-const GenericTable = ({ config, FormComponent, apiEndpoint, defaultFormData, pageTitle, fieldsConfig }) => {
+const GenericTable = ({
+  config,
+  FormComponent,
+  apiEndpoint,
+  defaultFormData,
+  pageTitle,
+  fieldsConfig
+}) => {
   const [data, setData] = useState([]);
+  const [activeBooleanCell, setActiveBooleanCell] = useState(null);
   const [editedData, setEditedData] = useState({});
   const [selectedRows, setSelectedRows] = useState(new Set());
   const [searchTerm, setSearchTerm] = useState("");
@@ -34,9 +42,31 @@ const GenericTable = ({ config, FormComponent, apiEndpoint, defaultFormData, pag
     fetchData();
   }, []);
 
+  useEffect(() => {
+  const handleClickOutside = (e) => {
+    if (activeBooleanCell && !e.target.closest('.boolean-dropdown')) {
+      setActiveBooleanCell(null);
+    }
+  };
+
+  document.addEventListener('mousedown', handleClickOutside);
+  return () => document.removeEventListener('mousedown', handleClickOutside);
+}, [activeBooleanCell]);
+
   const handleDataAdded = () => {
     fetchData();
   };
+
+  const handleBooleanSelect = (rowId, field, value) => {
+  setEditedData(prev => ({
+    ...prev,
+    [rowId]: {
+      ...prev[rowId],
+      [field]: value
+    }
+  }));
+  setActiveBooleanCell(null);
+};
 
   const handleEdit = (rowId, field, value) => {
     setEditedData((prev) => ({
@@ -109,13 +139,13 @@ const GenericTable = ({ config, FormComponent, apiEndpoint, defaultFormData, pag
 
   const handleItemsPerPageChange = (e) => {
     setItemsPerPage(Number(e.target.value));
-    setCurrentPage(1); // Reset to first page when changing items per page
+    setCurrentPage(1);
   };
 
   return (
     <div className="p-4">
       <LoadingBar isLoading={isLoading} />
-      <div className="max-w-5xl mx-auto mt-16">
+      <div className="max-w-6xl mx-auto mt-16">
         {/* Заголовок страницы */}
         <h1 className="text-text text-3xl text-center mb-6">{pageTitle}</h1>
 
@@ -259,24 +289,56 @@ const GenericTable = ({ config, FormComponent, apiEndpoint, defaultFormData, pag
                   </div>
                 </td>
                 {config.columns.map((column) => (
-                    <td key={column.key} className=""
-                        style={{width: column.width}}> {/* Используем width из конфигурации */}
-                      <input
-                          type={column.inputType || "text"}
-                          value={
-                            editedData[row.id]?.[column.key] !== undefined
-                                ? editedData[row.id][column.key]
-                                : row[column.key]
-                          }
-                          onChange={(e) =>
-                              handleEdit(row.id, column.key, e.target.value)
-                          }
-                          className={`bg-table-bg p-1 w-full text-left ${
-                              editedData[row.id]?.[column.key] ? "bg-yellow-100" : ""
-                          }`}
-                      />
-                    </td>
-                ))}
+                <td key={column.key} className="relative" style={{width: column.width}}>
+                  {column.type === "boolean" ? (
+                    <div className="relative boolean-dropdown">
+                      <div
+                        className={`bg-table-bg p-1 w-full text-left cursor-pointer ${
+                          editedData[row.id]?.[column.key] !== undefined ? "bg-yellow-100" : ""
+                        }`}
+                        onClick={() => setActiveBooleanCell(`${row.id}-${column.key}`)}
+                      >
+                        {(editedData[row.id]?.[column.key] !== undefined
+                          ? editedData[row.id][column.key]
+                          : row[column.key])
+                          ? "Да"
+                          : "Нет"}
+                      </div>
+
+                      {activeBooleanCell === `${row.id}-${column.key}` && (
+                        <div className="absolute z-10 bg-white border shadow-lg mt-1 w-full">
+                          <div
+                            className="p-2 hover:bg-gray-100 cursor-pointer"
+                            onClick={() => handleBooleanSelect(row.id, column.key, true)}
+                          >
+                            Да
+                          </div>
+                          <div
+                            className="p-2 hover:bg-gray-100 cursor-pointer"
+                            onClick={() => handleBooleanSelect(row.id, column.key, false)}
+                          >
+                            Нет
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <input
+                      type={column.inputType || "text"}
+                      value={
+                        editedData[row.id]?.[column.key] !== undefined
+                          ? editedData[row.id][column.key]
+                          : row[column.key]
+                      }
+                      disabled={column.disabled || false}
+                      onChange={(e) => handleEdit(row.id, column.key, e.target.value)}
+                      className={`bg-table-bg p-1 w-full text-left ${
+                        editedData[row.id]?.[column.key] ? "bg-yellow-100" : ""
+                      }`}
+                    />
+                  )}
+                </td>
+                    ))}
               </tr>
           ))}
           </tbody>

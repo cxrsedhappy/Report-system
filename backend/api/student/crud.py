@@ -1,4 +1,3 @@
-from click import group
 from fastapi import HTTPException
 
 from sqlalchemy import select, update, delete
@@ -47,7 +46,7 @@ async def get_student(student_id: int | None, session: AsyncSession, current_use
             name=_.name,
             surname=_.surname,
             lastname=_.lastname,
-            entrance=_.entrance,
+            entrance=bool(_.entrance),
             group=_.group.name if _.group is not None else "Нет группы",
             diploma=_.diploma.title if _.diploma is not None else "Нет темы",
             exams=len(_.exams)
@@ -55,8 +54,27 @@ async def get_student(student_id: int | None, session: AsyncSession, current_use
     ]
 
 
-async def update_student(user_ids: list[int], session, current_user):
-    ...
+async def update_student(users: list[UpdateStudentModel], session: AsyncSession, current_user):
+    if current_user.get('privilege') == 0:
+        raise HTTPException(403, detail="You don't have rights to update student")
+
+    for user in users:
+        user_to_update = session.get(Student, user.id)
+
+        if not user_to_update:
+            raise HTTPException(404, detail=f"User not found")
+
+        statement = (
+            update(Student)
+            .where(Student.id == user.id)
+            .values(user.model_dump(exclude_unset=True))
+        )
+
+        await session.execute(statement)
+        await session.commit()
+    return True
+
+
 
 
 async def delete_student(student_ids: list[int], session: AsyncSession, current_user):
