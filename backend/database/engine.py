@@ -3,6 +3,7 @@ from __future__ import annotations
 import sys
 import logging
 
+from sqlalchemy import NullPool
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
@@ -10,10 +11,10 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from backend.config import dbcfg
 from backend.database.tables import Base
 
-print(dbcfg.URL)
 engine = create_async_engine(
     url=dbcfg.URL,
-    echo=dbcfg.ECHO
+    echo=dbcfg.ECHO,
+    poolclass=NullPool
 )
 
 logger = logging.getLogger('uvicorn.error')

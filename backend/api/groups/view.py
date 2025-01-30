@@ -1,4 +1,4 @@
-from typing import List, Optional, Sequence
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -6,7 +6,6 @@ from backend.api.auth.auth import get_current_user
 from backend.api.groups import crud
 from backend.api.groups.models import GroupModel, CreateGroupModel, UpdateGroupModel
 from backend.database.engine import create_session
-from backend.database.tables import Group
 
 router = APIRouter(prefix='/api/group', tags=['Groups'])
 
@@ -26,7 +25,7 @@ async def get_group(
     group_id: Optional[int] = None,
     session: AsyncSession = Depends(create_session),
     current_user: dict = Depends(get_current_user)
-) -> List[Sequence[Group]]:
+):
     """
     Retrieve groups with optional filtering by group ID.
     """

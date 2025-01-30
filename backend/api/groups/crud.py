@@ -1,4 +1,4 @@
-from typing import List, Optional, Sequence
+from typing import List, Optional
 from fastapi import HTTPException
 from sqlalchemy import select, delete, update
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -24,7 +24,7 @@ async def create_group(group: CreateGroupModel, session: AsyncSession, current_u
     return GroupModel.model_validate(new_group)
 
 
-async def get_group(group_id: Optional[int], session: AsyncSession, current_user: dict) -> List[Sequence[Group]]:
+async def get_group(group_id: Optional[int], session: AsyncSession, current_user: dict) -> List[Group]:
     """Retrieve groups with optional filtering by group ID if the user has sufficient privileges."""
     if current_user.get('privilege') == GUEST_PRIVILEGE:
         raise HTTPException(status_code=403, detail="Insufficient privileges to retrieve groups")
