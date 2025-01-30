@@ -35,7 +35,7 @@ const UsersTable = () => (
   <GenericTable
     config={usersConfig}
     FormComponent={Form}
-    apiEndpoint="http://localhost:8000/api/user"
+    apiEndpoint="http://192.168.1.63:8000/api/user"
     defaultFormData={defaultUserData}
     pageTitle="Пользователи"
     fieldsConfig={userFieldsConfig} // Передаем fieldsConfig

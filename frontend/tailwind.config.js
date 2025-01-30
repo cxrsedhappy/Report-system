@@ -51,6 +51,9 @@ export default {
           hover: '#293440',
           text: '#8c9aa9',
         },
+        footer: {
+          bg: '#111417',
+        },
         bg: {
           DEFAULT: 'rgb(26, 32, 38)',
           hover: '#212a33',

@@ -1,8 +1,8 @@
-import React, {useState} from "react";
+import {useState} from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const API_URL = 'http://localhost:8000/api'
+const API_URL = 'http://192.168.1.63:8000/api'
 
 const Authorization = ({ onLogin, setLoading }) => {
   const [login, setLogin] = useState("");

@@ -11,4 +11,4 @@ const LoadingBar = ({ isLoading }) => {
   );
 };
 
-export default LoadingBar
+export default LoadingBar;
