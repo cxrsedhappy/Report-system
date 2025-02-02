@@ -4,6 +4,7 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+
   theme: {
     extend: {
       transitionProperty: {
@@ -26,37 +27,73 @@ export default {
       },
 
       colors: {
-        text: '#8794a1',
-        accent: '#4db2ff',
-        dropdown: '#dde4eb',
-        'dropdown-bg': '#2e3a47',
-        'dropdown-hover': '#384553',
-        'dropdown-secondary': '#8c9aa9',
-        article: '#fff',
-        field: '#fff',
-        'field-bg': '#242e38',
-        'field-placeholder': '#8a98a6',
-        'field-accent': '#248bda',
-        btn: {
-          primary: '#fff',
-          'primary-bg': 'rgb(36, 139, 218)',
-          'primary-hover': '#207cc2',
-          default: '#fff',
-          'default-bg': '#242e38',
-          'default-hover': '#293440',
+        dark: {
+          text: '#8794a1',
+          accent: '#4db2ff',
+          dropdown: '#dde4eb',
+          'dropdown-bg': '#2e3a47',
+          'dropdown-hover': '#384553',
+          'dropdown-secondary': '#8c9aa9',
+          article: '#fff',
+          field: '#fff',
+          'field-bg': '#242e38',
+          'field-placeholder': '#8a98a6',
+          'field-accent': '#248bda',
+          btn: {
+            primary: '#fff',
+            'primary-bg': 'rgb(36, 139, 218)',
+            'primary-hover': '#207cc2',
+            default: '#fff',
+            'default-bg': '#242e38',
+            'default-hover': '#293440',
+          },
+          table: {
+            bg: 'rgb(33, 42, 51)',
+            header: '#293440',
+            hover: '#293440',
+            text: '#8c9aa9',
+          },
+          footer: {
+            bg: '#111417',
+          },
+          bg: {
+            DEFAULT: 'rgb(26, 32, 38)',
+            hover: '#212a33',
+          },
         },
-        table: {
-          bg: 'rgb(33, 42, 51)',
-          header: '#293440',
-          hover: '#293440',
-          text: '#8c9aa9',
-        },
-        footer: {
-          bg: '#111417',
-        },
-        bg: {
-          DEFAULT: 'rgb(26, 32, 38)',
-          hover: '#212a33',
+        lavender: {
+          text: '#525252', // Темно-серый текст
+          accent: '#b8c0ff', // Мягкий лавандовый акцент
+          dropdown: '#fafafa', // Очень светлый фон выпадающего меню
+          'dropdown-bg': '#eaeaea', // Матовый серый фон выпадающего меню
+          'dropdown-hover': '#dcdcdc', // Наведение на элемент выпадающего меню
+          'dropdown-secondary': '#a0aec0', // Вторичный цвет для выпадающего меню
+          article: '#ffffff', // Белый фон для статей
+          field: '#ffffff', // Белый фон для полей ввода
+          'field-bg': '#fafafa', // Очень светлый фон для полей ввода
+          'field-placeholder': '#a0aec0', // Цвет плейсхолдера
+          'field-accent': '#b8c0ff', // Акцент для полей ввода
+          btn: {
+            primary: '#ffffff', // Белый текст кнопки
+            'primary-bg': '#b8c0ff', // Лавандовый фон основной кнопки
+            'primary-hover': '#a3b1ff', // Наведение на основную кнопку
+            default: '#525252', // Темно-серый текст кнопки по умолчанию
+            'default-bg': '#fafafa', // Очень светлый фон кнопки по умолчанию
+            'default-hover': '#eaeaea', // Наведение на кнопку по умолчанию
+          },
+          table: {
+            bg: '#ffffff', // Фон таблицы
+            header: '#fafafa', // Фон заголовка таблицы
+            hover: '#eaeaea', // Наведение на строку таблицы
+            text: '#718096', // Цвет текста в таблице
+          },
+          footer: {
+            bg: '#fafafa', // Фон футера
+          },
+          bg: {
+            DEFAULT: '#ffffff', // Основной фон страницы
+            hover: '#fafafa', // Наведение на элементы фона
+          },
         },
       },
       borderRadius: {

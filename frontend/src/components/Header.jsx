@@ -1,12 +1,15 @@
 // components/Header.jsx
-import { useEffect, useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom"; // Импортируем useLocation
+import {useContext, useEffect, useState} from "react";
+import { Link, useLocation } from "react-router-dom"; // Импортируем useLocation
 import Cookies from "js-cookie";
+import ThemeSwitcher from "./ThemeSwitcher.jsx";
+import {ThemeContext} from "../context/ThemeContext.jsx";
 
 const Header = () => {
   const [login, setLogin] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const location = useLocation(); // Получаем текущий маршрут
+  const { theme } = useContext(ThemeContext);
 
   useEffect(() => {
     const token = Cookies.get("access_token");
@@ -48,27 +51,30 @@ const Header = () => {
   };
 
   return (
-    <header className="flex justify-between items-center bg-table-bg p-4">
+    <header className={`flex bg-${theme}-table-bg justify-between items-center p-4`}>
       {/* Logo */}
-      <div className="text-accent text-2xl font-semibold"><a>Фрагмент</a></div>
+      <div className={`text-2xl font-semibold`}>
+        <a className={`text-${theme}-accent`}>Фрагмент</a>
+      </div>
 
       {/* Menu */}
-      <nav className="flex space-x-6 text-text">
-        <Link to="/users" className="hover:text-accent transition duration-200">
+      <nav className={`flex text-${theme}-text space-x-6`}>
+        <Link to="/users" className={`hover:text-${theme}-accent transition`}>
           Пользователи
         </Link>
-        <Link to="/performance" className="hover:text-accent transition duration-200">
+        <Link to="/performance" className={`hover:text-${theme}-accent transition`}>
           Успеваемость
         </Link>
-        <Link to="/diplomas" className="hover:text-accent transition duration-200">
+        <Link to="/diplomas" className={`hover:text-${theme}-accent transition`}>
           Дипломы
         </Link>
-        <Link to="/students" className="hover:text-accent transition duration-200">
+        <Link to="/students" className={`hover:text-${theme}-accent transition`}>
           Учащиеся
         </Link>
-        <Link to="/groups" className="hover:text-accent transition duration-200">
+        <Link to="/groups" className={`hover:text-${theme}-accent transition`}>
           Группы
         </Link>
+        <ThemeSwitcher />
       </nav>
 
       {/* Account Dropdown */}
@@ -80,21 +86,21 @@ const Header = () => {
           <img
             src="https://www.gravatar.com/avatar?d=mp"
             alt="User Avatar"
-            className="w-8 h-8 rounded-full border-2 border-accent"
+            className={`w-8 h-8 rounded-full border-2 border-${theme}-accent`}
           />
-          <span className="text-text">{login ? login : "Аккаунт"}</span>
+          <span className={`text-${theme}-text`}>{login ? login : "Аккаунт"}</span>
         </div>
         {isDropdownOpen && (
-          <div className="absolute right-0 mt-2 w-48 bg-dropdown-bg rounded shadow-lg z-10">
+          <div className={`absolute right-0 mt-2 w-48 bg-${theme}-dropdown-bg rounded shadow-lg z-10`}>
             <Link
               to="/add-subject"
-              className="block px-4 py-2 text-text hover:bg-dropdown-hover transition duration-200"
+              className={`block px-4 py-2 text-${theme}-text hover:bg-${theme}-dropdown-hover transition duration-200`}
             >
               Добавить предмет
             </Link>
             <button
               onClick={handleLogout}
-              className="block w-full text-left px-4 py-2 text-text hover:bg-dropdown-hover transition duration-200"
+              className={`block w-full text-left px-4 py-2 text-${theme}-text hover:bg-${theme}-dropdown-hover transition duration-200`}
             >
               Выйти
             </button>

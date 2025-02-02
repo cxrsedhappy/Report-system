@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import {useContext, useEffect, useState} from "react";
 import Form from "../components/Form.jsx";
 import ModalEdit from "../components/ModalEdit.jsx";
 import LoadingBar from "../components/LoadingBar.jsx";
 import GenericTable from "../components/GenericTable";
 import axios from "axios";
 import Cookies from "js-cookie";
+import {ThemeContext} from "../context/ThemeContext.jsx";
 
 const apiEndpoint = "http://192.168.1.63:8000/api/user";
 const pageTitle = "Пользователи";
@@ -38,6 +39,8 @@ const formConfig = [
 ];
 
 const UsersPage = () => {
+  const { theme } = useContext(ThemeContext);
+
   const [data, setData] = useState([]);
   const [selectedRows, setSelectedRows] = useState(new Set());
   const [isLoading, setLoading] = useState(false);
@@ -138,10 +141,10 @@ const UsersPage = () => {
 };
 
   return (
-    <div className="p-4">
+    <div className={`text-${theme}-text p-4`}>
       <LoadingBar isLoading={isLoading} />
       <div className="max-w-6xl mx-auto mt-16">
-        <h1 className="text-text text-3xl text-center mb-6">{pageTitle}</h1>
+        <h1 className="text-3xl text-center mb-6">{pageTitle}</h1>
 
         <div className="flex flex-col sm:flex-row justify-between items-center mb-4 space-y-4 sm:space-y-0">
           <input
@@ -200,16 +203,16 @@ const UsersPage = () => {
             ))}
           </select>
 
-          <div className="flex gap-2">
+          <div className={`flex gap-2`}>
             <button
-                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                className={`px-4 py-2 rounded bg-${theme}-btn-default hover:bg-${theme}-bg-hover`}
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
             >
               Назад
             </button>
 
-            <span className="text-text py-2">
+            <span className="py-2">
               Страница {currentPage} из {Math.ceil(filteredData.length / itemsPerPage)}
             </span>
 
