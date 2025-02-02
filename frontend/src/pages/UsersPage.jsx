@@ -1,45 +1,253 @@
-// UsersTable.jsx
-import GenericTable from "../components/GenericTable";
+import { useEffect, useState } from "react";
 import Form from "../components/Form.jsx";
+import ModalEdit from "../components/ModalEdit.jsx";
+import LoadingBar from "../components/LoadingBar.jsx";
+import GenericTable from "../components/GenericTable";
+import axios from "axios";
+import Cookies from "js-cookie";
 
-const usersConfig = {
-  columns: [
-    { key: "id", title: "ID", width: "5%" }, // Пример ширины для колонки ID
-    { key: "login", title: "Логин", width: "28%" }, // Пример ширины для колонки Логин
-    { key: "name", title: "Имя", width: "19%" }, // Пример ширины для колонки Имя
-    { key: "surname", title: "Фамилия", width: "19%" }, // Пример ширины для колонки Фамилия
-    { key: "lastname", title: "Отчество", width: "19%" }, // Пример ширины для колонки Отчество
-    { key: "privilege", title: "Привилегия", inputType: "number", width: "10%" }, // Пример ширины для колонки Привилегия
-  ],
-};
+const apiEndpoint = "http://192.168.1.63:8000/api/user";
+const pageTitle = "Пользователи";
 
-const defaultUserData = {
-  login: "",
-  password: "",
-  name: "",
-  surname: "",
-  lastname: "",
-  privilege: ""
-};
-
-const userFieldsConfig = [
-  { key: "login", title: "Логин", required: true },
-  { key: "password", title: "Пароль", inputType: "password", required: true },
-  { key: "name", title: "Имя", required: true},
-  { key: "surname", title: "Фамилия", required: true },
-  { key: "lastname", title: "Отчество" },
-  { key: "privilege", title: "Привилегия", inputType: "number"},
+const fieldsConfig = [
+  { key: "id", title: "ID", editable: false },
+  { key: "login", title: "Логин", editable: false},
+  { key: "name", title: "Имя", editable: true },
+  { key: "surname", title: "Фамилия", editable: true },
+  { key: "lastname", title: "Отчество", editable: true },
+  {
+    key: "privilege",
+    title: "Привилегия",
+    options: { "Гость": 0, "Преподаватель": 1, "Администратор": 2 },
+    editable: true
+  }
 ];
 
-const UsersTable = () => (
-  <GenericTable
-    config={usersConfig}
-    FormComponent={Form}
-    apiEndpoint="http://192.168.1.63:8000/api/user"
-    defaultFormData={defaultUserData}
-    pageTitle="Пользователи"
-    fieldsConfig={userFieldsConfig} // Передаем fieldsConfig
-  />
-);
+const formConfig = [
+  { key: "login", title: "Логин", editable: true },
+  { key: "password", title: "Пароль", editable: true },
+  { key: "name", title: "Имя", editable: true },
+  { key: "surname", title: "Фамилия", editable: true },
+  { key: "lastname", title: "Отчество", editable: true },
+  {
+    key: "privilege",
+    title: "Привилегия",
+    options: {"Гость": 0, "Преподаватель": 1, "Администратор": 2},
+    editable: true
+  }
+];
 
-export default UsersTable;
+const UsersPage = () => {
+  const [data, setData] = useState([]);
+  const [selectedRows, setSelectedRows] = useState(new Set());
+  const [isLoading, setLoading] = useState(false);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [isFormOpen, setFormOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [editedData, setEditedData] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+
+  const filteredData = data.filter(row =>
+    Object.values(row).some(value =>
+      String(value).toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const token = Cookies.get("access_token");
+      const response = await axios.get(apiEndpoint, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setData(response.data);
+    } catch (error) {
+      console.error("Ошибка при загрузке данных:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleDelete = async () => {
+    if (selectedRows.size === 0) return;
+    if (!confirm("Вы уверены, что хотите удалить выбранные записи?")) return;
+
+    setLoading(true);
+    try {
+      const token = Cookies.get("access_token");
+      await axios.delete(apiEndpoint, {
+        headers: { Authorization: `Bearer ${token}` },
+        data: Array.from(selectedRows)
+      });
+
+      setData(prev => prev.filter(item => !selectedRows.has(item.id)));
+      setSelectedRows(new Set());
+    } catch (error) {
+      console.error("Ошибка при удалении:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSave = async () => {
+  if (!editedData) return;
+  setLoading(true);
+
+  try {
+    const token = Cookies.get("access_token");
+
+    // Находим оригинальную запись
+    const originalData = data.find(item => item.id === editedData.id);
+
+    // Формируем объект с измененными данными
+    const changedData = Object.keys(editedData).reduce((acc, key) => {
+      if (editedData[key] !== originalData[key]) {
+        acc[key] = editedData[key];
+      }
+      return acc;
+    }, { id: editedData.id });
+
+    // Если есть изменения, отправляем их
+    if (Object.keys(changedData).length > 1) { // Проверяем, что есть изменения помимо 'id'
+      await axios.put(
+        apiEndpoint,
+        [changedData], // Оборачиваем данные в массив
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      setData(prev =>
+        prev.map(item => item.id === editedData.id ? { ...item, ...changedData } : item)
+      );
+    }
+
+    setModalOpen(false);
+  } catch (error) {
+    console.error("Ошибка при сохранении:", error);
+  } finally {
+    setLoading(false);
+  }
+};
+
+  return (
+    <div className="p-4">
+      <LoadingBar isLoading={isLoading} />
+      <div className="max-w-6xl mx-auto mt-16">
+        <h1 className="text-text text-3xl text-center mb-6">{pageTitle}</h1>
+
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-4 space-y-4 sm:space-y-0">
+          <input
+              type="text"
+              placeholder="Поиск..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="p-2 bg-btn-default-bg rounded text-table-text w-full sm:w-1/3"
+          />
+
+          <div className="flex space-x-2">
+            <button
+                className="p-2 bg-btn-default-bg text-table-text rounded hover:bg-btn-default-hover"
+                onClick={handleDelete}
+            >
+              Удалить
+            </button>
+            <button
+                className="p-2 bg-btn-primary-bg text-btn-primary rounded hover:bg-btn-primary-hover"
+                onClick={() => setFormOpen(true)}
+            >
+              Добавить
+            </button>
+          </div>
+        </div>
+
+        <GenericTable
+            config={{
+              columns: fieldsConfig.map(f => ({
+                key: f.key,
+                title: f.title,
+                type: f.type,
+                width: f.width
+              }))
+            }}
+            data={currentItems}
+            onRowClick={(row) => {
+              setEditedData(row);
+              setModalOpen(true);
+            }}
+            selectedRows={selectedRows}
+            onSelectedRowsChange={setSelectedRows}
+        />
+
+        <div className="flex justify-between items-center mt-4">
+          <select
+              value={itemsPerPage}
+              onChange={e => {
+                setItemsPerPage(Number(e.target.value));
+                setCurrentPage(1);
+              }}
+              className="p-2 bg-btn-default-bg rounded text-table-text"
+          >
+            {[5, 10, 15, 20].map(value => (
+                <option key={value} value={value}>{value}</option>
+            ))}
+          </select>
+
+          <div className="flex gap-2">
+            <button
+                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+            >
+              Назад
+            </button>
+
+            <span className="text-text py-2">
+              Страница {currentPage} из {Math.ceil(filteredData.length / itemsPerPage)}
+            </span>
+
+            <button
+                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                onClick={() => setCurrentPage(p =>
+                    Math.min(p + 1, Math.ceil(filteredData.length / itemsPerPage))
+                )}
+                disabled={currentPage >= Math.ceil(filteredData.length / itemsPerPage)}
+            >
+              Вперед
+            </button>
+          </div>
+        </div>
+
+        {isFormOpen && (
+            <Form
+                apiEndpoint={apiEndpoint}
+                formTitle="Добавить пользователя"
+                fieldsConfig={formConfig}
+                defaultData={{privilege: false}}
+                onClose={() => setFormOpen(false)}
+                onDataAdded={fetchData}
+            />
+        )}
+
+        <ModalEdit
+            isOpen={isModalOpen}
+            onClose={() => setModalOpen(false)}
+            columnsConfig={fieldsConfig}
+            editedData={editedData}
+            setEditedData={setEditedData}
+            onSave={handleSave}
+            isLoading={isLoading}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default UsersPage;

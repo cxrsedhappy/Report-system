@@ -2,7 +2,31 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import LoadingBar from "../components/LoadingBar.jsx";
+import ModalEdit from "../components/ModalEdit.jsx";
+import GenericTable from "../components/GenericTable.jsx";
 
+const groupStudentsConfig = {
+  columns: [
+    { key: "id", title: "ID", width: "10%" },
+    { key: "fio", title: "ФИО", width: "40%" },
+    { key: "educational_id", title: "Код студента", width: "30%" },
+    { key: "entrance", title: "Пропуск", width: "20%", type: "boolean" }
+  ]
+};
+
+const studentsConfig = {
+  columns: [
+    { key: "id", title: "ID", width: "3%" },
+    { key: "educational_id", title: "Код Студента", width: "11%" },
+    { key: "group", title: "Группа", width: "11%" , disabled: true},
+    { key: "surname", title: "Фамилия", width: "16%" },
+    { key: "name", title: "Имя", width: "15%" },
+    { key: "lastname", title: "Отчество", width: "15%" },
+    { key: "entrance", title: "Пропуск", width: "10%", type: "boolean", inputType: "checkbox" },
+    { key: "diploma", title: "Диплом", width: "10%", disabled: true },
+    { key: "exams", title: "Экзамены", width: "10%", disabled: true},
+  ]
+};
 const GroupsPage = () => {
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
@@ -13,6 +37,31 @@ const GroupsPage = () => {
     student_id: "",
     group_id: ""
   });
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [editedStudent, setEditedStudent] = useState(null);
+  const [currentStudentData, setCurrentStudentData] = useState({});
+
+  const handleStudentEdit = (student) => {
+    setEditedStudent(student);
+    setCurrentStudentData(student);
+    setEditModalOpen(true);
+  };
+
+  const handleStudentSave = async () => {
+    try {
+      const token = Cookies.get("access_token");
+      await axios.put(
+        "http://192.168.1.63:8000/api/student",
+        [currentStudentData],
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      await handleGroupSelect(selectedGroup.id);
+      setEditModalOpen(false);
+    } catch (err) {
+      console.error("Ошибка сохранения:", err);
+      alert("Ошибка при сохранении изменений");
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,8 +72,7 @@ const GroupsPage = () => {
         const groupsResponse = await axios.get("http://192.168.1.63:8000/api/group", {
           headers: { Authorization: `Bearer ${token}` }
         });
-        setGroups(groupsResponse.data[0]);
-        // Загрузка студентов
+        setGroups(groupsResponse.data);
         const studentsResponse = await axios.get("http://192.168.1.63:8000/api/student", {
           headers: { Authorization: `Bearer ${token}` }
         });
@@ -42,16 +90,18 @@ const GroupsPage = () => {
     setLoading(true);
     try {
       const token = Cookies.get("access_token");
-      const response = await axios.get(`http://192.168.1.63:8000/api/group?group_ids=${groupId}`, {
+      const response = await axios.get(`http://192.168.1.63:8000/api/group?group_id=${groupId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      const groupData = response.data[0][0];
+      const groupData = response.data[0];
       // Если students_count отсутствует, вычисляем его
-      groupData.students_count = groupData.students ? groupData.students.length : 0;
+      // Безопасное вычисление students_count
+      groupData.students_count = groupData.students?.length || 0;
       setSelectedGroup(groupData);
       setFormData(prev => ({ ...prev, group_id: groupId }));
     } catch (err) {
       console.error("Ошибка загрузки группы:", err);
+      alert("Не удалось загрузить данные группы");
     } finally {
       setLoading(false);
     }
@@ -176,57 +226,40 @@ const GroupsPage = () => {
 
         {/* Информация о группе и таблица студентов */}
         {selectedGroup && (
-          <div className="flex gap-8 mt-8">
-            {/* Карточка информации о группе */}
-            <div className="w-1/3 p-4 bg-table-bg rounded-lg shadow-md">
-              <h2 className="text-text text-xl font-bold mb-4">Информация о группе</h2>
-              <p className="text-text">
-                <strong>ID Группы:</strong> {selectedGroup.id}
-              </p>
-              <p className="text-text">
-                <strong>Название группы:</strong> {selectedGroup.name}
-              </p>
-              <p className="text-text">
-                <strong>Количество студентов:</strong> {selectedGroup.students_count || 0}
-              </p>
-              <p className="text-text">
-                <strong>Дата создания:</strong>{" "}
-                {new Date(selectedGroup.created_at).toLocaleDateString("ru-RU", {
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                })}
-              </p>
-            </div>
+        <div className="flex gap-8 mt-8">
+          {/* ... карточка информации о группе ... */}
 
-            {/* Таблица студентов группы */}
-            <div className="w-2/3">
-              <h2 className="text-text text-xl mb-4">Студенты группы</h2>
-              <table className="table-auto bg-table-bg w-full text-left text-text">
-                <thead className="bg-table-hover">
-                  <tr>
-                    <th className="p-2">ID</th>
-                    <th className="p-2">ФИО</th>
-                    <th className="p-2">Код студента</th>
-                    <th className="p-2">Пропуск</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {selectedGroup.students.map((student) => (
-                    <tr key={student.id}>
-                      <td className="p-2">{student.id}</td>
-                      <td className="p-2">
-                        {`${student.surname} ${student.name} ${student.lastname || ""}`}
-                      </td>
-                      <td className="p-2">{student.educational_id}</td>
-                      <td className="p-2">{student.entrance ? "Да" : "Нет"}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+          <div className="w-2/3">
+            <h2 className="text-text text-xl mb-4">Студенты группы</h2>
+            <GenericTable
+              config={groupStudentsConfig}
+              data={selectedGroup.students.map(student => ({
+                ...student,
+                fio: `${student.surname} ${student.name} ${student.lastname || ""}`
+              }))}
+              onRowClick={handleStudentEdit}
+              customRender={{
+                fio: (row) => `${row.surname} ${row.name} ${row.lastname || ""}`,
+                entrance: (row) => row.entrance ? "Да" : "Нет"
+              }}
+              disablePagination
+              disableSearch
+              disableHeaderTools
+            />
           </div>
-        )}
+        </div>
+      )}
+
+      <ModalEdit
+        isOpen={isEditModalOpen}
+        onClose={() => setEditModalOpen(false)}
+        columnsConfig={studentsConfig.columns} // Ваш конфиг из StudentsPage
+        editedData={currentStudentData}
+        setEditedData={setCurrentStudentData}
+        onSave={handleStudentSave}
+        isLoading={isLoading}
+      />
+
       </div>
     </div>
   );

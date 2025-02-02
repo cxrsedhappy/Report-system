@@ -34,12 +34,12 @@ const studentFieldsConfig = [
 
 const StudentsPage = () => (
   <GenericTable
+    pageTitle="Студенты"
     config={studentsConfig}
     FormComponent={Form}
     apiEndpoint="http://192.168.1.63:8000/api/student"
     defaultFormData={defaultStudentData}
-    pageTitle="Студенты"
-    fieldsConfig={studentFieldsConfig} // Передаем fieldsConfig
+    fieldsConfig={studentFieldsConfig}
   />
 );
 

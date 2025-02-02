@@ -6,7 +6,6 @@ import Cookies from "js-cookie";
 const Header = () => {
   const [login, setLogin] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const navigate = useNavigate();
   const location = useLocation(); // Получаем текущий маршрут
 
   useEffect(() => {
@@ -24,8 +23,8 @@ const Header = () => {
 
   // Закрываем dropdown при изменении маршрута
   useEffect(() => {
-    setIsDropdownOpen(false); // Сбрасываем состояние при переходе на новую страницу
-  }, [location.pathname]); // Отслеживаем изменения маршрута
+    setIsDropdownOpen(false);
+  }, [location.pathname]);
 
   // Функция для закрытия dropdown при клике вне его области
   useEffect(() => {
@@ -36,10 +35,8 @@ const Header = () => {
       }
     };
 
-    // Добавляем слушатель события на document
-    document.addEventListener("mousedown", handleClickOutside);
 
-    // Очищаем слушатель при размонтировании компонента
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -47,7 +44,7 @@ const Header = () => {
 
   const handleLogout = () => {
     Cookies.remove("access_token");
-    window.location.reload(); // Перезагрузка страницы
+    window.location.reload();
   };
 
   return (

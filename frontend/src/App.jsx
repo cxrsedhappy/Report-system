@@ -1,9 +1,9 @@
 // App.jsx
 import { useState, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import Cookies from "js-cookie";
+
 import Header from "./components/Header.jsx";
-import Footer from "./components/Footer.jsx"; // Импортируем Footer
+import Footer from "./components/Footer.jsx";
 import Authorization from "./components/Authorization.jsx";
 import LoadingBar from "./components/LoadingBar.jsx";
 import UsersPage from "./pages/UsersPage";
@@ -12,6 +12,8 @@ import DiplomasPage from "./pages/DiplomasPage";
 import StudentsPage from "./pages/StudentsPage";
 import GroupsPage from "./pages/GroupsPage.jsx";
 import AddSubjectPage from "./pages/AddSubjectPage";
+
+import Cookies from "js-cookie";
 
 const validateToken = (token) => {
   try {
