@@ -67,16 +67,6 @@ async def update_user(
 
             await _update_user_field(session, user_id, login=login)
 
-        # Обновление пароля
-        # if password:
-        #     if current_user['id'] != user_id:
-        #         raise HTTPException(status_code=403, detail="You can't change other user's password")
-        #
-        #     salt = ''.join(random.choices(string.digits + string.punctuation + string.ascii_letters, k=8))
-        #     hashed_password = get_password_hash(password, salt)
-        #
-        #     await _update_user_field(session, user_id, password=hashed_password, salt=salt)
-
         # Обновление других данных
         if current_user.get('privilege') != 2 and privilege is not None:
             raise HTTPException(status_code=403, detail="You have no rights to change user's privilege")
