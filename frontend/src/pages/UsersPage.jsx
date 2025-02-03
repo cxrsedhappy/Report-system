@@ -143,27 +143,27 @@ const UsersPage = () => {
   return (
     <div className={`text-${theme}-text p-4`}>
       <LoadingBar isLoading={isLoading} />
-      <div className="max-w-6xl mx-auto mt-16">
-        <h1 className="text-3xl text-center mb-6">{pageTitle}</h1>
+      <div className={"max-w-6xl mx-auto mt-16"}>
+        <h1 className={"text-3xl text-center mb-6"}>{pageTitle}</h1>
 
-        <div className="flex flex-col sm:flex-row justify-between items-center mb-4 space-y-4 sm:space-y-0">
+        <div className={"flex flex-col sm:flex-row justify-between items-center mb-4 space-y-4 sm:space-y-0"}>
           <input
               type="text"
               placeholder="Поиск..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="p-2 bg-btn-default-bg rounded text-table-text w-full sm:w-1/3"
+              className={`p-2 rounded bg-${theme}-btn-default-bg text-${theme}-table-text w-full sm:w-1/3`}
           />
 
-          <div className="flex space-x-2">
+          <div className={"flex space-x-2"}>
             <button
-                className="p-2 bg-btn-default-bg text-table-text rounded hover:bg-btn-default-hover"
+                className={`px-4 py-2 rounded bg-${theme}-btn-default-bg hover:bg-${theme}-btn-default-hover`}
                 onClick={handleDelete}
             >
               Удалить
             </button>
             <button
-                className="p-2 bg-btn-primary-bg text-btn-primary rounded hover:bg-btn-primary-hover"
+                className={`px-4 py-2 rounded bg-${theme}-btn-primary-bg text-white hover:bg-${theme}-btn-default-hover`}
                 onClick={() => setFormOpen(true)}
             >
               Добавить
@@ -189,14 +189,14 @@ const UsersPage = () => {
             onSelectedRowsChange={setSelectedRows}
         />
 
-        <div className="flex justify-between items-center mt-4">
+        <div className={"flex justify-between items-center mt-4"}>
           <select
               value={itemsPerPage}
               onChange={e => {
                 setItemsPerPage(Number(e.target.value));
                 setCurrentPage(1);
               }}
-              className="p-2 bg-btn-default-bg rounded text-table-text"
+              className={`p-2 bg-${theme}-btn-default-bg rounded text-table-text`}
           >
             {[5, 10, 15, 20].map(value => (
                 <option key={value} value={value}>{value}</option>
@@ -205,19 +205,19 @@ const UsersPage = () => {
 
           <div className={`flex gap-2`}>
             <button
-                className={`px-4 py-2 rounded bg-${theme}-btn-default hover:bg-${theme}-bg-hover`}
+                className={`px-4 py-2 rounded bg-${theme}-btn-default-hover hover:bg-${theme}-btn-default-hover`}
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
             >
               Назад
             </button>
 
-            <span className="py-2">
+            <span className={"py-2"}>
               Страница {currentPage} из {Math.ceil(filteredData.length / itemsPerPage)}
             </span>
 
             <button
-                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                className={`px-4 py-2 rounded bg-${theme}-btn-default-hover hover:bg-${theme}-btn-default-hover`}
                 onClick={() => setCurrentPage(p =>
                     Math.min(p + 1, Math.ceil(filteredData.length / itemsPerPage))
                 )}

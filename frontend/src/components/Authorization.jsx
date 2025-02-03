@@ -1,10 +1,13 @@
-import {useState} from "react";
+import {useContext, useState} from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import {ThemeContext} from "../context/ThemeContext.jsx";
 
 const API_URL = 'http://192.168.1.63:8000/api'
 
 const Authorization = ({ onLogin, setLoading }) => {
+  const { theme } = useContext(ThemeContext);
+
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -28,27 +31,27 @@ const Authorization = ({ onLogin, setLoading }) => {
   };
 
   return (
-    <div className="p-4 bg-bg rounded shadow-md w-full max-w-md mt-72">
-      <h2 className="text-lg font-semibold text-white mb-4">Authorization</h2>
+    <div className={`p-4 bg-${theme}-bg rounded shadow-md w-full max-w-md mt-72`}>
+      <h2 className={`text-lg font-semibold text-${theme}-field mb-4`}>Authorization</h2>
       <form onSubmit={handleLogin} className="space-y-4">
         <input
           type="text"
           placeholder="Login"
-          className="w-full p-2 bg-field-bg text-field placeholder-field-placeholder rounded"
+          className={`w-full p-2 bg-${theme}-field-bg text-${theme}-field placeholder-field-placeholder rounded`}
           value={login}
           onChange={(e) => setLogin(e.target.value)}
         />
         <input
           type="password"
           placeholder="Password"
-          className="w-full p-2 bg-field-bg text-field placeholder-field-placeholder rounded"
+          className={`w-full p-2 bg-${theme}-field-bg text-${theme}-field placeholder-field-placeholder rounded`}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
         {error && <p className="text-red-500 text-sm">{error}</p>}
         <button
           type="submit"
-          className="w-full bg-btn-primary-bg text-btn-primary hover:bg-btn-primary-hover transition duration-DEFAULT p-2 rounded"
+          className={`w-full bg-${theme}-btn-primary-bg text-${theme}-btn-primary hover:bg-btn-primary-hover transition duration-DEFAULT p-2 rounded`}
         >
           Login
         </button>

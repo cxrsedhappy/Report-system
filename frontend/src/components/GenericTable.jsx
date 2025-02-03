@@ -1,6 +1,8 @@
-import {useEffect, useRef} from "react";
+import {useContext, useEffect, useRef} from "react";
+import {ThemeContext} from "../context/ThemeContext.jsx";
 
 const GenericTable = ({config, data, selectedRows, onSelectedRowsChange, onRowClick}) => {
+  const { theme } = useContext(ThemeContext);
   const masterCheckboxRef = useRef(null);
 
   useEffect(() => {
@@ -25,9 +27,9 @@ const GenericTable = ({config, data, selectedRows, onSelectedRowsChange, onRowCl
   };
 
   return (
-    <table className="table-auto bg-table-bg w-full text-left text-text">
-      <thead className="bg-table-hover">
-        <tr>
+    <table className={`table-auto w-full text-left`}>
+      <thead>
+        <tr className={`bg-${theme}-table-header`}>
           <th className="h-12" style={{ width: "10px" }}>
             <div className="w-10 flex items-center">
               <input
@@ -35,13 +37,14 @@ const GenericTable = ({config, data, selectedRows, onSelectedRowsChange, onRowCl
                 ref={masterCheckboxRef}
                 onChange={handleMasterCheckbox}
                 checked={selectedRows.size === data.length && data.length > 0}
+                className={`accent-${theme}-accent`}
               />
             </div>
           </th>
           {config.columns.map((column) => (
             <th
               key={column.key}
-              className="h-6 p-2"
+              className={`h-6 p-2 text-${theme}-text`}
               style={{ width: column.width }}
             >
               {column.title}
@@ -53,10 +56,10 @@ const GenericTable = ({config, data, selectedRows, onSelectedRowsChange, onRowCl
         {data.map((row) => (
           <tr
             key={row.id}
-            className={`cursor-pointer transition-colors duration-200 ${
+            className={`cursor-pointer transition-colors duration-200 bg-${theme}-table-hover hover:bg-${theme}-table-bg ${
               selectedRows.has(row.id)
-                ? "bg-selected"
-                : "hover:bg-table-hover"
+                ? `bg-${theme}-accent/20`
+                : `hover:bg-${theme}-table-hover`
             }`}
             onClick={() => onRowClick(row)}
           >
@@ -64,7 +67,7 @@ const GenericTable = ({config, data, selectedRows, onSelectedRowsChange, onRowCl
               <div className="w-10 flex items-center">
                 <input
                   type="checkbox"
-                  className="m-auto accent-bg-hover hover:accent-pink-500"
+                  className={`m-auto`}
                   checked={selectedRows.has(row.id)}
                   onChange={(e) => handleRowCheckbox(e, row.id)}
                   onClick={(e) => e.stopPropagation()}
@@ -74,7 +77,7 @@ const GenericTable = ({config, data, selectedRows, onSelectedRowsChange, onRowCl
             {config.columns.map((column) => (
               <td
                 key={column.key}
-                className="p-2"
+                className={`p-2 text-${theme}-table-text`}
                 style={{ width: column.width }}
               >
                 {column.type === "boolean"

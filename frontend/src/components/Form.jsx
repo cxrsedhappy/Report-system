@@ -62,7 +62,7 @@ const Form = ({ onClose, onDataAdded, defaultData, apiEndpoint, formTitle, field
           ${isVisible ? "translate-y-0" : "translate-y-[-20px]"}`}
         style={{ zIndex: 10000 }}
       >
-        <h2 className="text-xl mb-4">{formTitle}</h2>
+        <h2 className="text-2xl mb-4 text-black">{formTitle}</h2>
         <form onSubmit={handleAdd}>
           <div className="space-y-4">
             {fieldsConfig
@@ -71,7 +71,7 @@ const Form = ({ onClose, onDataAdded, defaultData, apiEndpoint, formTitle, field
               field.options ? (
                 // Если у поля есть options, отображаем выпадающий список
                 <div key={field.key}>
-                  <label className="mb">{field.title}</label>
+                  <label className="block text-sm font-medium mb-1 text-black">{field.title}</label>
                   <select
                     value={formData[field.key]}
                     onChange={(e) => setFormData({ ...formData, [field.key]: e.target.value })}
@@ -88,7 +88,7 @@ const Form = ({ onClose, onDataAdded, defaultData, apiEndpoint, formTitle, field
               ) : (
                 // Иначе отображаем обычное текстовое поле
                 <div key={field.key} className="relative">
-                  <label className="block mb-1">{field.title}</label>
+                  <label className="block text-sm font-medium mb-1 text-black">{field.title}</label>
                   <input
                     type={field.inputType || "text"}
                     value={formData[field.key] || ""}

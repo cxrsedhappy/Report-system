@@ -4,7 +4,13 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-
+  safelist: [
+    // Паттерны для динамических классов
+    { pattern: /bg-(dark|lavender)-(bg|text|accent|dropdown|dropdown-bg|dropdown-hover|dropdown-secondary|article|field|field-bg|field-placeholder|field-accent|btn-primary-bg|btn-primary-hover|btn-default-bg|btn-default-hover|table-bg|table-header|table-hover|table-text|footer-bg)/ },
+    { pattern: /text-(dark|lavender)-(text|accent)/ },
+    { pattern: /hover:bg-(dark|lavender)-(bg-hover)/ },
+    { pattern: /hover:text-(dark|lavender)-(text)/ },
+  ],
   theme: {
     extend: {
       transitionProperty: {
@@ -25,7 +31,6 @@ export default {
         'slide-in': 'slideIn 0.3s ease-out',
         'slide-out': 'slideOut 0.3s ease-in'
       },
-
       colors: {
         dark: {
           text: '#8794a1',
@@ -82,8 +87,8 @@ export default {
             'default-hover': '#eaeaea', // Наведение на кнопку по умолчанию
           },
           table: {
-            bg: '#ffffff', // Фон таблицы
-            header: '#fafafa', // Фон заголовка таблицы
+            bg: '#fafafa', // Фон таблицы
+            header: '#f3f3f3', // Фон заголовка таблицы
             hover: '#eaeaea', // Наведение на строку таблицы
             text: '#718096', // Цвет текста в таблице
           },

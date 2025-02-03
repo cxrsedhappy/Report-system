@@ -86,7 +86,7 @@ const Header = () => {
           <img
             src="https://www.gravatar.com/avatar?d=mp"
             alt="User Avatar"
-            className={`w-8 h-8 rounded-full border-2 border-${theme}-accent`}
+            className={`w-8 h-8 rounded-full border-2 bg-${theme}-btn-primary-bg`}
           />
           <span className={`text-${theme}-text`}>{login ? login : "Аккаунт"}</span>
         </div>

@@ -13,13 +13,13 @@ const ModalEdit = ({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg w-full max-w-3xl max-h-[90vh] flex flex-col md:flex-row overflow-hidden">
         <div className="w-full md:w-3/5 p-6 overflow-y-auto">
-          <h2 className="text-2xl mb-4">Редактирование записи</h2>
+          <h2 className="text-2xl mb-4 text-black">Редактирование записи</h2>
           {columnsConfig
             .filter(column => !column.disabled)
             .map((column) => (
               column.options ? (
                 <div key={column.key} className="mb-4">
-                  <label className="block text-sm font-medium mb-1">
+                  <label className="block text-sm font-medium mb-1 text-black">
                     {column.title}
                   </label>
                   <select
@@ -39,7 +39,7 @@ const ModalEdit = ({
                 </div>
                 ) : (
                 <div key={column.key} className="mb-4">
-                  <label className="block text-sm font-medium mb-1">
+                  <label className="block text-sm font-medium mb-1 text-black">
                     {column.title}
                   </label>
                   <input
@@ -64,19 +64,19 @@ const ModalEdit = ({
             </button>
             <button
                 onClick={onClose}
-                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                className="px-4 py-2 bg-gray-200 rounded text-black hover:bg-gray-400"
             >
               Отменить
             </button>
           </div>
         </div>
 
-        <div className="w-full md:w-2/5 bg-gray-100 p-6 border-l">
+        <div className="w-full md:w-2/5 bg-gray-100 p-6 border-l text-black">
           <h3 className="text-lg font-semibold mb-4">Инструкция</h3>
           <ul className="space-y-2 text-sm">
-            <li>Заполните необходимые поля</li>
-            <li>Серые поля недоступны для редактирования</li>
-            <li>Изменения сохранятся после нажатия <span className="font-bold">Изменить</span></li>
+            <li>1) Заполните необходимые поля</li>
+            <li>2) Серые поля недоступны для редактирования</li>
+            <li>3) Изменения сохранятся после нажатия "<span className="font-bold">Изменить</span>"</li>
           </ul>
         </div>
       </div>
