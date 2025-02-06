@@ -4,7 +4,7 @@ import {ThemeContext} from "../context/ThemeContext.jsx";
 const Footer = () => {
   const { theme } = useContext(ThemeContext);
   return (
-    <footer className={`bg-${theme}-footer-bg text-center p-4 mt-8`}>
+    <footer className={`bg-${theme}-footer-bg text-center p-4 mt-8 duration-200`}>
       <p className={`text-${theme}-text text-sm`}>
         Фрагмент. Все права защищены
       </p>

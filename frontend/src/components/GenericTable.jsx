@@ -29,22 +29,22 @@ const GenericTable = ({config, data, selectedRows, onSelectedRowsChange, onRowCl
   return (
     <table className={`table-auto w-full text-left`}>
       <thead>
-        <tr className={`bg-${theme}-table-header`}>
-          <th className="h-12" style={{ width: "10px" }}>
-            <div className="w-10 flex items-center">
+        <tr className={`bg-${theme}-table-header duration-200`}>
+          <th className="h-12 duration-200" style={{ width: "10px" }}>
+            <div className="w-10 flex items-center duration-200">
               <input
                 type="checkbox"
                 ref={masterCheckboxRef}
                 onChange={handleMasterCheckbox}
                 checked={selectedRows.size === data.length && data.length > 0}
-                className={`accent-${theme}-accent`}
+                className={`accent-${theme}-accent duration-200`}
               />
             </div>
           </th>
           {config.columns.map((column) => (
             <th
               key={column.key}
-              className={`h-6 p-2 text-${theme}-text`}
+              className={`h-6 p-2 text-${theme}-text duration-200`}
               style={{ width: column.width }}
             >
               {column.title}
@@ -58,8 +58,8 @@ const GenericTable = ({config, data, selectedRows, onSelectedRowsChange, onRowCl
             key={row.id}
             className={`cursor-pointer transition-colors duration-200 bg-${theme}-table-hover hover:bg-${theme}-table-bg ${
               selectedRows.has(row.id)
-                ? `bg-${theme}-accent/20`
-                : `hover:bg-${theme}-table-hover`
+                ? `bg-${theme}-accent`
+                : `hover:bg-${theme}-table-hover` 
             }`}
             onClick={() => onRowClick(row)}
           >

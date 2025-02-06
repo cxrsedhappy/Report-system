@@ -50,7 +50,7 @@ const App = () => {
 
       {isAuthenticated && <Header />}
 
-      <div className="flex-grow">
+      <div className="flex-grow duration-200">
         {isAuthenticated ? (
           <Routes>
             <Route path="/groups" element={<GroupsPage />} />
@@ -62,7 +62,7 @@ const App = () => {
             <Route path="*" element={<Navigate to="/users" />} />
           </Routes>
         ) : (
-          <div className={`flex items-center justify-center h-full bg-${theme}-dropdown-bg`}>
+          <div className={`flex items-center justify-center h-full `}>
             <Authorization onLogin={handleLogin} setLoading={setLoading} />
           </div>
         )}

@@ -32,7 +32,7 @@ const Authorization = ({ onLogin, setLoading }) => {
 
   return (
     <div className={`p-4 bg-${theme}-bg rounded shadow-md w-full max-w-md mt-72`}>
-      <h2 className={`text-lg font-semibold text-${theme}-field mb-4`}>Authorization</h2>
+      <h2 className={`text-lg text-${theme}-text font-semibold text-${theme}-field mb-4`}>Authorization</h2>
       <form onSubmit={handleLogin} className="space-y-4">
         <input
           type="text"

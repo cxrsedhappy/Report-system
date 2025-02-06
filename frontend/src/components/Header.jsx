@@ -51,7 +51,7 @@ const Header = () => {
   };
 
   return (
-    <header className={`flex bg-${theme}-table-bg justify-between items-center p-4`}>
+    <header className={`flex bg-${theme}-table-bg justify-between items-center p-4 duration-200`}>
       {/* Logo */}
       <div className={`text-2xl font-semibold`}>
         <a className={`text-${theme}-accent`}>Фрагмент</a>

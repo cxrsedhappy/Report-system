@@ -18,8 +18,8 @@ const ModalEdit = ({
             .filter(column => !column.disabled)
             .map((column) => (
               column.options ? (
-                <div key={column.key} className="mb-4">
-                  <label className="block text-sm font-medium mb-1 text-black">
+                <div key={column.key} className={`mb-4 text-black`}>
+                  <label className="block text-sm font-medium mb-1">
                     {column.title}
                   </label>
                   <select
@@ -38,8 +38,8 @@ const ModalEdit = ({
                   </select>
                 </div>
                 ) : (
-                <div key={column.key} className="mb-4">
-                  <label className="block text-sm font-medium mb-1 text-black">
+                <div key={column.key} className="mb-4 text-black">
+                  <label className="block text-sm font-medium mb-1">
                     {column.title}
                   </label>
                   <input
