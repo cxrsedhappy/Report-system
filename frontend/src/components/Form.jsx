@@ -103,7 +103,7 @@ const Form = ({ onClose, onDataAdded, defaultData, apiEndpoint, formTitle, field
             ))}
           </div>
           <div className="flex justify-end mt-6 space-x-2">
-            <button type="button" onClick={handleClose} className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">
+            <button type="button" onClick={handleClose} className="px-4 py-2 bg-gray-300 text-black rounded hover:bg-gray-400">
               Отмена
             </button>
             <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">

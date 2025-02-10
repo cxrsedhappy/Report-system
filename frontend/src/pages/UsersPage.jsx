@@ -152,18 +152,18 @@ const UsersPage = () => {
               placeholder="Поиск..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className={`p-2 rounded bg-${theme}-btn-default-bg text-${theme}-table-text w-full sm:w-1/3`}
+              className={`w-full sm:w-1/3 p-2 border rounded bg-${theme}-btn-default-bg text-${theme}-table-text border-${theme}-border duration-200`}
           />
 
           <div className={"flex space-x-2"}>
             <button
-                className={`px-4 py-2 rounded bg-${theme}-btn-default-bg hover:bg-${theme}-btn-default-hover`}
+                className={`px-4 py-2 rounded bg-${theme}-btn-default-bg hover:bg-${theme}-btn-default-hover duration-200`}
                 onClick={handleDelete}
             >
               Удалить
             </button>
             <button
-                className={`px-4 py-2 rounded bg-${theme}-btn-primary-bg text-white hover:bg-${theme}-btn-default-hover`}
+                className={`px-4 py-2 rounded bg-${theme}-btn-primary-bg text-${theme}-rich-text hover:bg-${theme}-btn-default-hover duration-200`}
                 onClick={() => setFormOpen(true)}
             >
               Добавить
@@ -196,7 +196,7 @@ const UsersPage = () => {
                 setItemsPerPage(Number(e.target.value));
                 setCurrentPage(1);
               }}
-              className={`p-2 bg-${theme}-btn-default-bg rounded text-table-text`}
+              className={`p-2 bg-${theme}-btn-default-bg rounded text-table-text duration-200`}
           >
             {[5, 10, 15, 20].map(value => (
                 <option key={value} value={value}>{value}</option>
@@ -205,7 +205,7 @@ const UsersPage = () => {
 
           <div className={`flex gap-2`}>
             <button
-                className={`px-4 py-2 rounded bg-${theme}-btn-default-hover hover:bg-${theme}-btn-default-hover`}
+                className={`px-4 py-2 rounded bg-${theme}-btn-default-hover hover:bg-${theme}-btn-default-hover duration-200`}
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
             >
@@ -217,7 +217,7 @@ const UsersPage = () => {
             </span>
 
             <button
-                className={`px-4 py-2 rounded bg-${theme}-btn-default-hover hover:bg-${theme}-btn-default-hover`}
+                className={`px-4 py-2 rounded bg-${theme}-btn-default-hover hover:bg-${theme}-btn-default-hover duration-200`}
                 onClick={() => setCurrentPage(p =>
                     Math.min(p + 1, Math.ceil(filteredData.length / itemsPerPage))
                 )}

@@ -37,14 +37,14 @@ const Authorization = ({ onLogin, setLoading }) => {
         <input
           type="text"
           placeholder="Login"
-          className={`w-full p-2 bg-${theme}-field-bg text-${theme}-field placeholder-field-placeholder rounded`}
+          className={`w-full p-2 bg-${theme}-field-bg text-${theme}-text placeholder-field-placeholder rounded`}
           value={login}
           onChange={(e) => setLogin(e.target.value)}
         />
         <input
           type="password"
           placeholder="Password"
-          className={`w-full p-2 bg-${theme}-field-bg text-${theme}-field placeholder-field-placeholder rounded`}
+          className={`w-full p-2 bg-${theme}-field-bg text-${theme}-text placeholder-field-placeholder rounded`}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />

@@ -7,15 +7,17 @@ export default {
   safelist: [
     // Паттерны для динамических классов
     { pattern: /bg-(dark|lavender)-(bg|text|accent|dropdown|dropdown-bg|dropdown-hover|dropdown-secondary|article|field|field-bg|field-placeholder|field-accent|btn-primary-bg|btn-primary-hover|btn-default-bg|btn-default-hover|table-bg|table-header|table-hover|table-text|footer-bg)/ },
-    { pattern: /text-(dark|lavender)-(text|accent)/ },
-    { pattern: /hover:bg-(dark|lavender)-(bg-hover)/ },
-    { pattern: /hover:text-(dark|lavender)-(text)/ },
+    { pattern: /text-(dark|lavender)-(text|accent|rich-text)/ },
+    { pattern: /border-(dark|lavander)-border/ },
+    { pattern: /hover:bg-(dark|lavender)-(btn-primary-bg|btn-primary-hover|btn-default-bg|btn-default-hover|table-bg|table-header|table-hover|table-text)/ },
+    { pattern: /hover:text-(dark|lavender)-(text|accent|rich-text)/ },
   ],
   theme: {
     extend: {
       transitionProperty: {
         'all': 'all',
         'opacity-transform': 'opacity, transform',
+        '200': '200ms'
       },
       keyframes: {
         slideIn: {
@@ -34,6 +36,7 @@ export default {
       colors: {
         dark: {
           text: '#8794a1',
+          'rich-text': '#ffffff',
           accent: '#4db2ff',
           dropdown: '#dde4eb',
           'dropdown-bg': '#2e3a47',
@@ -58,6 +61,9 @@ export default {
             hover: '#293440',
             text: '#8c9aa9',
           },
+          border: {
+            DEFAULT: '#293440',
+          },
           footer: {
             bg: '#111417',
           },
@@ -68,6 +74,7 @@ export default {
         },
         lavender: {
           text: '#525252', // Темно-серый текст
+          'rich-text': '#1c1c1c',
           accent: '#b8c0ff', // Мягкий лавандовый акцент
           dropdown: '#fafafa', // Очень светлый фон выпадающего меню
           'dropdown-bg': '#eaeaea', // Матовый серый фон выпадающего меню
@@ -98,6 +105,9 @@ export default {
           bg: {
             DEFAULT: '#ffffff', // Основной фон страницы
             hover: '#fafafa', // Наведение на элементы фона
+          },
+          border: {
+            DEFAULT: '#2363a8',
           },
         },
       },

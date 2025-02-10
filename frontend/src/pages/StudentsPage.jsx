@@ -146,18 +146,18 @@ const StudentsPage = () => {
               placeholder="Поиск..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className={`p-2 rounded bg-${theme}-btn-default-bg text-${theme}-table-text w-full sm:w-1/3`}
+              className={`w-full sm:w-1/3 p-2 border rounded bg-${theme}-btn-default-bg text-${theme}-table-text border-${theme}-border duration-200`}
           />
 
           <div className={"flex space-x-2"}>
             <button
-                className={`px-4 py-2 rounded bg-${theme}-btn-default-bg hover:bg-${theme}-btn-default-hover`}
+                className={`px-4 py-2 rounded bg-${theme}-btn-default-bg hover:bg-${theme}-btn-default-hover duration-200`}
                 onClick={handleDelete}
             >
               Удалить
             </button>
             <button
-                className={`px-4 py-2 rounded bg-${theme}-btn-primary-bg text-white hover:bg-${theme}-btn-default-hover`}
+                className={`px-4 py-2 rounded bg-${theme}-btn-primary-bg text-${theme}-rich-text hover:bg-${theme}-btn-default-hover duration-200`}
                 onClick={() => setFormOpen(true)}
             >
               Добавить
@@ -199,7 +199,7 @@ const StudentsPage = () => {
 
           <div className={`flex gap-2`}>
             <button
-                className={`px-4 py-2 rounded bg-${theme}-btn-default-hover hover:bg-${theme}-btn-default-hover`}
+                className={`px-4 py-2 rounded bg-${theme}-btn-default-hover hover:bg-${theme}-btn-default-hover duration-200`}
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
             >
@@ -211,7 +211,7 @@ const StudentsPage = () => {
             </span>
 
             <button
-                className={`px-4 py-2 rounded bg-${theme}-btn-default-hover hover:bg-${theme}-btn-default-hover`}
+                className={`px-4 py-2 rounded bg-${theme}-btn-default-hover hover:bg-${theme}-btn-default-hover duration-200`}
                 onClick={() => setCurrentPage(p =>
                     Math.min(p + 1, Math.ceil(filteredData.length / itemsPerPage))
                 )}
@@ -225,7 +225,7 @@ const StudentsPage = () => {
         {isFormOpen && (
             <Form
                 apiEndpoint={apiEndpoint}
-                formTitle="Добавить пользователя"
+                formTitle="Добавить студента"
                 fieldsConfig={formConfig}
                 defaultData={{privilege: false}}
                 onClose={() => setFormOpen(false)}
