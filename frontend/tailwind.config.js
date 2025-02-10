@@ -35,8 +35,8 @@ export default {
       },
       colors: {
         dark: {
-          text: '#8794a1',
-          'rich-text': '#ffffff',
+          text: '#a8b3bd',
+          'rich-text': '#e4e4e4',
           accent: '#4db2ff',
           dropdown: '#dde4eb',
           'dropdown-bg': '#2e3a47',

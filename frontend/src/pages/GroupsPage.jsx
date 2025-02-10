@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import {useState, useEffect, useContext} from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import LoadingBar from "../components/LoadingBar.jsx";
 import ModalEdit from "../components/ModalEdit.jsx";
 import GenericTable from "../components/GenericTable.jsx";
+import {ThemeContext} from "../context/ThemeContext.jsx";
 
 const groupStudentsConfig = {
   columns: [
@@ -28,6 +29,7 @@ const studentsConfig = {
   ]
 };
 const GroupsPage = () => {
+  const { theme } = useContext(ThemeContext);
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [allStudents, setAllStudents] = useState([]);
@@ -38,7 +40,6 @@ const GroupsPage = () => {
     group_id: ""
   });
   const [isEditModalOpen, setEditModalOpen] = useState(false);
-  const [editedStudent, setEditedStudent] = useState(null);
   const [currentStudentData, setCurrentStudentData] = useState({});
 
   const handleStudentEdit = (student) => {
@@ -136,12 +137,12 @@ const GroupsPage = () => {
     <div className="p-4">
       <LoadingBar isLoading={isLoading} />
       <div className="max-w-6xl mx-auto mt-16">
-        <h1 className="text-text text-3xl text-center mb-6">Группы</h1>
+        <h1 className={`text-${theme}-text text-3xl text-center mb-6`}>Группы</h1>
         {/* Выбор группы */}
         <div className="mb-4 flex gap-4 items-center">
           <select
             onChange={(e) => handleGroupSelect(e.target.value)}
-            className="w-full p-2 bg-field-bg text-text rounded"
+            className={`w-full p-2 bg-${theme}-field-bg text-${theme}-text rounded border border-${theme}-border duration-200`}
           >
             <option value="">Выберите группу</option>
             {groups.map((group) => (
@@ -152,7 +153,7 @@ const GroupsPage = () => {
           </select>
           <button
             onClick={() => setShowAddForm(true)}
-            className="p-2 bg-btn-primary-bg text-btn-primary rounded hover:bg-btn-primary-hover whitespace-nowrap"
+            className={`p-2 bg-${theme}-btn-primary-bg text-${theme}-rich-text rounded hover:bg-${theme}-btn-primary-hover whitespace-nowrap duration-200`}
           >
             Добавить студента
           </button>
@@ -161,21 +162,21 @@ const GroupsPage = () => {
         {/* Модальное окно добавления */}
         {showAddForm && (
           <div
-            className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+            className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50000"
             onClick={closeModal}
           >
-            <div className="bg-table-bg p-6 rounded-lg w-96" onClick={(e) => e.stopPropagation()}>
-              <h2 className="text-text text-xl mb-4">Добавить студента в группу</h2>
+            <div className={`bg-lavender-table-bg text-lavender-rich-text p-6 rounded-lg w-96`} onClick={(e) => e.stopPropagation()}>
+              <h2 className="text-xl mb-4">Добавить студента в группу</h2>
               <form onSubmit={handleAddStudent}>
                 <div className="space-y-4">
                   <div>
-                    <label className="text-text">Студент:</label>
+                    <label className="text-text">Студент</label>
                     <select
                       value={formData.student_id}
                       onChange={(e) =>
                         setFormData({ ...formData, student_id: e.target.value })
                       }
-                      className="w-full p-2 bg-field-bg text-text rounded mt-1"
+                      className={`w-full p-2 bg-lavender-field-bg rounded border border-${theme}-border mt-1.5`}
                       required
                     >
                       <option value="">Выберите студента</option>
@@ -187,13 +188,13 @@ const GroupsPage = () => {
                     </select>
                   </div>
                   <div>
-                    <label className="text-text">Группа:</label>
+                    <label className="text-text">Группа</label>
                     <select
                       value={formData.group_id}
                       onChange={(e) =>
                         setFormData({ ...formData, group_id: e.target.value })
                       }
-                      className="w-full p-2 bg-field-bg text-text rounded mt-1"
+                      className={`w-full p-2 bg-lavander-field-bg rounded border border-${theme}-border mt-1.5`}
                       required
                     >
                       {groups.map((group) => (
@@ -214,7 +215,7 @@ const GroupsPage = () => {
                   </button>
                   <button
                     type="submit"
-                    className="p-2 bg-btn-primary-bg text-btn-primary rounded hover:bg-btn-primary-hover"
+                    className="p-2 bg-dark-btn-primary-bg text-dark-btn-primary rounded hover:bg-btn-primary-hover"
                   >
                     Добавить
                   </button>
@@ -224,36 +225,33 @@ const GroupsPage = () => {
           </div>
         )}
 
-        {/* Информация о группе и таблица студентов */}
         {selectedGroup && (
-        <div className="flex gap-8 mt-8">
-          {/* ... карточка информации о группе ... */}
-
-          <div className="w-2/3">
-            <h2 className="text-text text-xl mb-4">Студенты группы</h2>
-            <GenericTable
-              config={groupStudentsConfig}
-              data={selectedGroup.students.map(student => ({
-                ...student,
-                fio: `${student.surname} ${student.name} ${student.lastname || ""}`
-              }))}
-              onRowClick={handleStudentEdit}
-              customRender={{
-                fio: (row) => `${row.surname} ${row.name} ${row.lastname || ""}`,
-                entrance: (row) => row.entrance ? "Да" : "Нет"
-              }}
-              disablePagination
-              disableSearch
-              disableHeaderTools
-            />
+          <div className={`w-1/3 p-4 bg-${theme}-table-bg text-${theme}-text rounded-lg shadow-md duration-200`}>
+            <h2 className={`text-${theme}-rich-text text-xl font-bold mb-4`}>Информация о группе</h2>
+            <p className={`mt-2`}>
+              <strong>ID Группы:</strong> {selectedGroup.id}
+            </p>
+            <p className="mt-1">
+              <strong>Название группы:</strong> {selectedGroup.name}
+            </p>
+            <p className="mt-1">
+              <strong>Количество студентов:</strong> {selectedGroup.students_count || 0}
+            </p>
+            <p className="mt-1">
+              <strong>Дата создания:</strong>{" "}
+              {new Date(selectedGroup.created_at).toLocaleDateString("ru-RU", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })}
+            </p>
           </div>
-        </div>
       )}
 
       <ModalEdit
         isOpen={isEditModalOpen}
         onClose={() => setEditModalOpen(false)}
-        columnsConfig={studentsConfig.columns} // Ваш конфиг из StudentsPage
+        columnsConfig={studentsConfig.columns}
         editedData={currentStudentData}
         setEditedData={setCurrentStudentData}
         onSave={handleStudentSave}
