@@ -82,7 +82,7 @@ export default {
           'dropdown-secondary': '#a0aec0', // Вторичный цвет для выпадающего меню
           article: '#ffffff', // Белый фон для статей
           field: '#ffffff', // Белый фон для полей ввода
-          'field-bg': '#fafafa', // Очень светлый фон для полей ввода
+          'field-bg': '#f6f6f6', // Очень светлый фон для полей ввода
           'field-placeholder': '#a0aec0', // Цвет плейсхолдера
           'field-accent': '#b8c0ff', // Акцент для полей ввода
           btn: {

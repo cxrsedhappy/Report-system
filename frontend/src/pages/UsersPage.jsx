@@ -19,6 +19,7 @@ const fieldsConfig = [
   {
     key: "privilege",
     title: "Привилегия",
+    type: "options",
     options: { "Гость": 0, "Преподаватель": 1, "Администратор": 2 },
     editable: true
   }
@@ -33,6 +34,7 @@ const formConfig = [
   {
     key: "privilege",
     title: "Привилегия",
+    type: "boolean",
     options: {"Гость": 0, "Преподаватель": 1, "Администратор": 2},
     editable: true
   }
@@ -177,6 +179,7 @@ const UsersPage = () => {
                 key: f.key,
                 title: f.title,
                 type: f.type,
+                options: f.options,
                 width: f.width
               }))
             }}
@@ -233,7 +236,7 @@ const UsersPage = () => {
                 apiEndpoint={apiEndpoint}
                 formTitle="Добавить пользователя"
                 fieldsConfig={formConfig}
-                defaultData={{privilege: false}}
+                defaultData={{privilege: 0}}
                 onClose={() => setFormOpen(false)}
                 onDataAdded={fetchData}
             />

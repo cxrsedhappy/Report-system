@@ -18,7 +18,7 @@ const fieldsConfig = [
     { key: "surname", title: "Фамилия", width: "16%", editable: true },
     { key: "name", title: "Имя", width: "15%", editable: true },
     { key: "lastname", title: "Отчество", width: "15%", editable: true },
-    { key: "entrance", title: "Пропуск", width: "10%", editable: true, options: {"Да": 1, "Нет": 0} },
+    { key: "entrance", title: "Пропуск", width: "10%", editable: true, boolean: true, type: "options", options: {"Да": 1, "Нет": 0} },
     { key: "diploma", title: "Диплом", width: "10%", editable: false},
     { key: "exams", title: "Экзамены", width: "10%", editable: false},
   ];
@@ -29,7 +29,7 @@ const formConfig = [
   { key: "surname", title: "Фамилия" },
   { key: "name", title: "Имя" },
   { key: "lastname", title: "Отчество" },
-  { key: "entrance", title: "Пропуск", options: {"Да": 1, "Нет": 0}},
+  { key: "entrance", title: "Пропуск", type: "boolean", options: {"Да": 1, "Нет": 0}},
 ];
 
 const StudentsPage = () => {
@@ -171,6 +171,7 @@ const StudentsPage = () => {
                 key: f.key,
                 title: f.title,
                 type: f.type,
+                options: f.options,
                 width: f.width
               }))
             }}

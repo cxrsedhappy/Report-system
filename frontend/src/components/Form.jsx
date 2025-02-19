@@ -73,8 +73,8 @@ const Form = ({ onClose, onDataAdded, defaultData, apiEndpoint, formTitle, field
                 <div key={field.key}>
                   <label className="block text-sm font-medium mb-1 text-black">{field.title}</label>
                   <select
-                    value={formData[field.key]}
-                    onChange={(e) => setFormData({ ...formData, [field.key]: e.target.value })}
+                    value={formData[field.key ?? Object.values(field.options)[0]]}
+                    onChange={(e) => setFormData({ ...formData, [field.key]: parseInt(e.target.value, 10) })}
                     className="w-full p-2 border rounded"
                     required={field.required}
                   >

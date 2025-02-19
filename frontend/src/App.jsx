@@ -62,8 +62,8 @@ const App = () => {
             <Route path="*" element={<Navigate to="/users" />} />
           </Routes>
         ) : (
-          <div className={`flex items-center justify-center h-full `}>
-            <Authorization onLogin={handleLogin} setLoading={setLoading} />
+          <div className="flex items-center justify-center h-full p-4">
+            <Authorization onLogin={handleLogin} setLoading={setLoading}/>
           </div>
         )}
       </div>

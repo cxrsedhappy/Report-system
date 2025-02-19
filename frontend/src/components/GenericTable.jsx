@@ -28,17 +28,17 @@ const GenericTable = ({config, data, selectedRows, onSelectedRowsChange, onRowCl
 
   return (
     <div className={'rounded-lg overflow-hidden'}>
-      <table className={`table-auto w-full text-left `}>
-        <thead>
-          <tr className={`bg-${theme}-table-header duration-200`}>
+      <table className={`table-auto w-full text-left`}>
+        <thead className={`bg-${theme}-table-header duration-200`}>
+          <tr>
             <th className="h-12" style={{ width: "10px" }}>
-              <div className="w-10 flex items-center">
+              <div className="w-10 items-center">
                 <input
                   type="checkbox"
                   ref={masterCheckboxRef}
                   onChange={handleMasterCheckbox}
                   checked={selectedRows.size === data.length && data.length > 0}
-                  className={`accent-${theme}-accent`}
+                  className={`accent-${theme}-accent w-full`}
                 />
               </div>
             </th>
@@ -53,13 +53,13 @@ const GenericTable = ({config, data, selectedRows, onSelectedRowsChange, onRowCl
             ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody className={`bg-${theme}-table-hover`}>
           {data.map((row) => (
             <tr
               key={row.id}
-              className={`cursor-pointer bg-${theme}-table-hover hover:bg-${theme}-table-bg duration-200 ${
+              className={`cursor-pointer hover:bg-${theme}-table-bg duration-200 ${
                 selectedRows.has(row.id)
-                  ? `bg-${theme}-accent`
+                  ? `bg-${theme}-dropdown-hover`
                   : `hover:bg-${theme}-table-hover` 
               }`}
               onClick={() => onRowClick(row)}
@@ -77,13 +77,15 @@ const GenericTable = ({config, data, selectedRows, onSelectedRowsChange, onRowCl
               </td>
               {config.columns.map((column) => (
                 <td
-                  key={column.key}
-                  className={`p-2 text-${theme}-table-text`}
-                  style={{ width: column.width }}
+                    key={column.key}
+                    className={`p-2 text-${theme}-table-text`}
+                    style={{width: column.width}}
                 >
                   {column.type === "boolean"
-                    ? row[column.key] ? "Да" : "Нет"
-                    : row[column.key]}
+                      ? row[column.key] ? "Да" : "Нет"
+                      : column.options
+                          ? Object.entries(column.options).find(([k, v]) => v === row[column.key])?.[0] ?? row[column.key]
+                          : row[column.key]}
                 </td>
               ))}
             </tr>

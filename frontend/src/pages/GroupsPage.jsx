@@ -22,7 +22,7 @@ const studentsConfig = {
     { key: "group", title: "Группа", width: "11%" , disabled: true},
     { key: "surname", title: "Фамилия", width: "16%" },
     { key: "name", title: "Имя", width: "15%" },
-    { key: "lastname", title: "Отчество", width: "15%" },
+    { key: "lastname", title: "Отчество", width: "15%", editable: true },
     { key: "entrance", title: "Пропуск", width: "10%", type: "boolean", inputType: "checkbox" },
     { key: "diploma", title: "Диплом", width: "10%", disabled: true },
     { key: "exams", title: "Экзамены", width: "10%", disabled: true},
@@ -41,12 +41,8 @@ const GroupsPage = () => {
   });
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [currentStudentData, setCurrentStudentData] = useState({});
-
-  const handleStudentEdit = (student) => {
-    setEditedStudent(student);
-    setCurrentStudentData(student);
-    setEditModalOpen(true);
-  };
+  const [selectedRows, setSelectedRows] = useState(new Set());
+  const [editedData, setEditedData] = useState(null);
 
   const handleStudentSave = async () => {
     try {
@@ -104,6 +100,7 @@ const GroupsPage = () => {
       console.error("Ошибка загрузки группы:", err);
       alert("Не удалось загрузить данные группы");
     } finally {
+      console.log(selectedGroup.students)
       setLoading(false);
     }
   };
@@ -159,6 +156,7 @@ const GroupsPage = () => {
           </button>
         </div>
 
+        <div className={`flex gap-4 items-center text-${theme}-text w-full`}>
         {/* Модальное окно добавления */}
         {showAddForm && (
           <div
@@ -247,6 +245,21 @@ const GroupsPage = () => {
             </p>
           </div>
       )}
+        <div className={"w-full"}>
+        {selectedGroup && (
+            <GenericTable
+              config={groupStudentsConfig}
+              data={selectedGroup.students}
+              onRowClick={(row) => {
+                setEditedData(row);
+                setEditModalOpen(true);
+              }}
+              selectedRows={selectedRows}
+              onSelectedRowsChange={setSelectedRows}
+            />
+        )}
+        </div>
+        </div>
 
       <ModalEdit
         isOpen={isEditModalOpen}

@@ -31,32 +31,32 @@ const Authorization = ({ onLogin, setLoading }) => {
   };
 
   return (
-    <div className={`p-4 bg-${theme}-bg rounded shadow-md w-full max-w-md mt-72`}>
-      <h2 className={`text-lg text-${theme}-text font-semibold text-${theme}-field mb-4`}>Authorization</h2>
-      <form onSubmit={handleLogin} className="space-y-4">
-        <input
-          type="text"
-          placeholder="Login"
-          className={`w-full p-2 bg-${theme}-field-bg text-${theme}-text placeholder-field-placeholder rounded`}
-          value={login}
-          onChange={(e) => setLogin(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          className={`w-full p-2 bg-${theme}-field-bg text-${theme}-text placeholder-field-placeholder rounded`}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        {error && <p className="text-red-500 text-sm">{error}</p>}
-        <button
-          type="submit"
-          className={`w-full bg-${theme}-btn-primary-bg text-${theme}-btn-primary hover:bg-btn-primary-hover transition duration-DEFAULT p-2 rounded`}
-        >
-          Login
-        </button>
-      </form>
-    </div>
+      <div className={`bg-${theme}-bg rounded shadow-md w-full max-w-md`}>
+        <h2 className={`text-${theme}-text text-lg font-semibold mb-4`}>Authorization</h2>
+        <form onSubmit={handleLogin} className="space-y-4">
+          <input
+            type="text"
+            placeholder="Login"
+            className={`w-full p-2 bg-${theme}-field-bg text-${theme}-text placeholder-field-placeholder rounded`}
+            value={login}
+            onChange={(e) => setLogin(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            className={`w-full p-2 bg-${theme}-field-bg text-${theme}-text placeholder-field-placeholder rounded`}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          {error && <p className="text-red-500 text-sm font-bold">{error}</p>}
+          <button
+            type="submit"
+            className={`w-full bg-${theme}-btn-primary-bg text-${theme}-btn-primary hover:bg-btn-primary-hover transition duration-DEFAULT p-2 rounded`}
+          >
+            Login
+          </button>
+        </form>
+      </div>
   );
 };
 

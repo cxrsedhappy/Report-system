@@ -99,7 +99,7 @@ async def _update_user_field(session: AsyncSession, user_id: int, **fields):
 async def delete_user(user_ids: list[int], session, current_user):
     privilege = current_user.get('privilege')
 
-    if privilege != 3:
+    if privilege < 2:
         raise HTTPException(status_code=403, detail='You have no rights to delete users')
 
     statement = (
