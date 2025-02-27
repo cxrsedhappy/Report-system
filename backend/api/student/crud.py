@@ -47,8 +47,8 @@ async def get_student(student_id: int | None, session: AsyncSession, current_use
             surname=_.surname,
             lastname=_.lastname,
             entrance=bool(_.entrance),
-            group=_.group.name if _.group is not None else "Нет группы",
-            diploma=_.diploma.title if _.diploma is not None else "Нет темы",
+            group=_.group.name if _.group is not None else None,
+            diploma=_.diploma.title if _.diploma is not None else None,
             exams=len(_.exams)
         ) for _ in students
     ]
