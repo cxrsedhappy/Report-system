@@ -1,8 +1,9 @@
-import random
+from typing import List, Optional
+
 import string
+import secrets
 
-from fastapi import HTTPException
-
+from fastapi import HTTPException, status
 from sqlalchemy import select, update, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -12,7 +13,32 @@ from backend.database.tables import User
 
 
 async def create_user(user: CreateUserSchema, session: AsyncSession) -> UserSchema:
-    salt = ''.join(random.choices(string.digits + string.punctuation + string.ascii_letters, k=8))
+    """
+    Создает нового пользователя с хешированием пароля.
+
+    Проверяет уникальность логина, генерирует соль и хеш пароля.
+
+    Args:
+        user: Данные для создания пользователя
+        session: Асинхронная сессия БД
+
+    Returns:
+        UserSchema: Созданный пользователь
+
+    Raises:
+        HTTPException: 409 - Логин занят
+    """
+    # Проверка уникальности логина
+    existing_user = await session.execute(select(User).where(User.login == user.login))
+
+    if existing_user.scalars().first():
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f"Логин '{user.login}' уже занят"
+        )
+
+    # Генерация криптографически безопасной соли
+    salt = ''.join(secrets.choice(string.ascii_letters + string.digits + string.punctuation) for _ in range(16))
     hashed_password = get_password_hash(user.password, salt)
 
     new_user = User(
@@ -24,87 +50,130 @@ async def create_user(user: CreateUserSchema, session: AsyncSession) -> UserSche
         lastname=user.lastname,
         privilege=user.privilege
     )
+
     session.add(new_user)
     await session.commit()
     await session.refresh(new_user)
-    user_schema = UserSchema.model_validate(new_user)
-    return user_schema
+    return UserSchema.model_validate(new_user)
 
 
-async def get_users_by_id(user_id: int, session: AsyncSession) -> list[UserSchema]:
-    if not user_id:
-        statement = select(User).order_by(User.id)
-    else:
-        statement = select(User).where(User.id == user_id).order_by(User.id)
+async def get_users_by_id(user_id: Optional[int] = None, session: AsyncSession = None) -> List[UserSchema]:
+    """
+    Получает пользователей по ID или всех пользователей.
 
-    result = await session.execute(statement)
-    users = result.scalars().all()
-    return [UserSchema.model_validate(user) for user in users]
+    Args:
+        user_id: ID пользователя или None для всех
+        session: Асинхронная сессия
+
+    Returns:
+        Список пользователей
+    """
+    query = select(User)
+    if user_id is not None:
+        query = query.where(User.id == user_id)
+
+    result = await session.execute(query.order_by(User.id))
+    return [UserSchema.model_validate(u) for u in result.scalars().all()]
 
 
-async def update_user(
-        updated_users: list[UserParamSchema],
-        session: AsyncSession,
-        current_user: dict
-):
-    for user in updated_users:
+async def update_user(updates: List[UserParamSchema], session: AsyncSession, current_user: dict) -> dict:
+    """
+    Пакетное обновление пользователей с проверкой прав.
 
-        user_id = user.id
-        login = user.login
-        name = user.name
-        surname = user.surname
-        lastname = user.lastname
-        privilege = user.privilege
+    Args:
+        updates: Список обновлений
+        session: Сессия БД
+        current_user: Текущий пользователь
 
-        # Проверка прав пользователя
-        if current_user['id'] != user_id and current_user.get('privilege') == 0:
-            raise HTTPException(status_code=403, detail="You can't change other user's data")
+    Returns:
+        Статус операции
+
+    Raises:
+        HTTPException: 403 - Недостаточно прав
+        HTTPException: 404 - Пользователь не найден
+    """
+    # Предварительная проверка существования пользователей
+    _ = await session.execute(select(User.id))
+    existing_ids = {u for u in _.scalars().all()}
+    update_ids = {u.id for u in updates}
+    missing = update_ids - existing_ids
+    if missing:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Пользователи {missing} не найдены"
+        )
+
+    # Пакетное обновление
+    for user_update in updates:
+        # Проверка прав на изменение
+        if current_user['id'] != user_update.id and current_user['privilege'] < 2:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Недостаточно прав для изменения чужих данных"
+            )
+
+        # Проверка прав на изменение привилегий
+        if user_update.privilege is not None and current_user['privilege'] < 2:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Только администратор может менять привилегии"
+            )
 
         # Обновление логина
-        if login:
-            if current_user['id'] != user_id:
-                raise HTTPException(status_code=403, detail="You can't change other user's login")
+        if user_update.login:
+            if current_user['id'] != user_update.id and current_user['privilege'] < 2:
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="Только владелец или администратор может менять логин"
+                )
 
-            await _update_user_field(session, user_id, login=login)
+        # Сборка параметров обновления
+        update_data = user_update.model_dump(exclude_unset=True)
+        if 'password' in update_data:
+            raise NotImplementedError("Смена пароля требует отдельной реализации")
 
-        # Обновление других данных
-        if current_user.get('privilege') != 2 and privilege is not None:
-            raise HTTPException(status_code=403, detail="You have no rights to change user's privilege")
+        await session.execute(update(User).where(User.id == user_update.id).values(**update_data))
 
-        # Обновление имени, фамилии, отчества
-        if name:
-            await _update_user_field(session, user_id, name=name)
+    await session.commit()
+    return {"status": "success", "updated": len(updates)}
 
-        if surname:
-            await _update_user_field(session, user_id, surname=surname)
 
-        if lastname:
-            await _update_user_field(session, user_id, lastname=lastname)
+async def delete_user(user_ids: List[int], session: AsyncSession, current_user: dict) -> dict:
+    """
+    Удаляет пользователей по ID.
 
-        # Обновление привилегий
-        if privilege is not None:
-            await _update_user_field(session, user_id, privilege=privilege)
+    Args:
+        user_ids: Список ID пользователей
+        session: Сессия БД
+        current_user: Текущий пользователь
 
-        await session.commit()
+    Returns:
+        Статус операции
 
-async def _update_user_field(session: AsyncSession, user_id: int, **fields):
-    """Обновление указанных полей пользователя."""
-    statement = (
-        update(User)
-        .where(User.id == user_id)
-        .values(**fields)
-    )
-    await session.execute(statement)
+    Raises:
+        HTTPException: 403 - Недостаточно прав
+        HTTPException: 404 - Пользователи не найдены
+    """
+    if current_user['privilege'] < 2:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Только администратор может удалять пользователей"
+        )
 
-async def delete_user(user_ids: list[int], session, current_user):
-    privilege = current_user.get('privilege')
+    _ = await session.execute(select(User.id))
+    existing = set(_.scalars().all())
+    to_delete = set(user_ids)
+    missing = to_delete - existing
 
-    if privilege < 2:
-        raise HTTPException(status_code=403, detail='You have no rights to delete users')
+    if missing:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Пользователи {missing} не найдены"
+        )
 
-    statement = (
+    await session.execute(
         delete(User)
         .where(User.id.in_(user_ids))
     )
-    await session.execute(statement)
     await session.commit()
+    return {"status": "success", "deleted": len(user_ids)}

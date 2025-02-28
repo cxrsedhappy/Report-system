@@ -20,11 +20,7 @@ async def protected(current_user = Depends(get_current_user)):
 
 
 @router.get('')
-async def get_users_by_id(
-        user_id: int = None,
-        session: AsyncSession = Depends(create_session),
-        current_user = Depends(get_current_user)
-):
+async def get_users_by_id(user_id: int = None, session: AsyncSession = Depends(create_session),):
     return await crud.get_users_by_id(user_id, session)
 
 @router.put('')
