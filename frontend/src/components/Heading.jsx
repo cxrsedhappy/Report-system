@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 import ThemeSwitcher from "./ThemeSwitcher.jsx";
 import {ThemeContext} from "../context/ThemeContext.jsx";
 
-const Header = () => {
+const Heading = () => {
   const [login, setLogin] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const location = useLocation(); // Получаем текущий маршрут
@@ -111,4 +111,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default Heading;
