@@ -38,11 +38,11 @@ class UpdateStudentModel(BaseModel):
 
 class InfoStudentModel(BaseModel):
     id: int
-    educational_id: str = None
+    educational_id: str | None = None
     name: str = None
     surname: str = None
     lastname: str = None
     entrance: bool = None
-    group: str = None
-    diploma: str = None
-    exams: int = None
+    group: str | None = None
+    diploma: str | None = None
+    exams: int | None = None
