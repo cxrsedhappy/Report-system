@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from email.policy import default
 
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import mapped_column, Mapped, relationship
@@ -18,6 +19,7 @@ class Student(Base, TimestampMixin, SerializerMixin):
     name: Mapped[str] = mapped_column(default="", nullable=False)
     surname: Mapped[str] = mapped_column(default="", nullable=False)
     lastname: Mapped[str] = mapped_column(default="", nullable=True)
+    phone: Mapped[str] = mapped_column(default="", nullable=True)
 
     entrance: Mapped[bool] = mapped_column(default=False, nullable=True)
 

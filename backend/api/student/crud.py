@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from backend.api.student.models import StudentModel, CreateStudentModel, UpdateStudentModel, InfoStudentModel
-from backend.database.tables import Student
+from backend.database.tables import Student, Group
 
 # Константы уровней привилегий
 GUEST_PRIVILEGE = 0
@@ -49,6 +49,15 @@ async def create_student(student: CreateStudentModel, session: AsyncSession, cur
     #     )
 
     new_student = Student(**student.model_dump())
+
+    if student.group_id is not None:
+        group = await session.get(Group, student.group_id)
+
+        if not group:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Группы с ID {student.group_id} не найдено")
+
+        group.students.append(new_student)
+
     session.add(new_student)
     await session.commit()
     await session.refresh(new_student)
@@ -100,6 +109,7 @@ async def get_student(
             name=student.name,
             surname=student.surname,
             lastname=student.lastname,
+            phone=student.phone,
             entrance=bool(student.entrance),
             group=student.group.name if student.group else None,
             diploma=student.diploma.title if student.diploma else None,
@@ -114,6 +124,7 @@ async def get_student(
             name=s.name,
             surname=s.surname,
             lastname=s.lastname,
+            phone=s.phone,
             entrance=bool(s.entrance),
             group=s.group.name if s.group else None,
             diploma=s.diploma.title if s.diploma else None,
