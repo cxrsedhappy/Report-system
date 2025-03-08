@@ -1,7 +1,6 @@
-import {useState, useEffect, useContext} from "react";
+import {useState, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
-import {ThemeContext} from "./context/ThemeContext";
 import Cookies from "js-cookie";
 
 import Authorization from "./components/Authorization.jsx"
@@ -30,7 +29,6 @@ const validateToken = (token) => {
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setLoading] = useState(false);
-  const { theme } = useContext(ThemeContext);
 
   useEffect(() => {
     const token = Cookies.get("access_token");
@@ -49,7 +47,7 @@ const App = () => {
   };
 
   return (
-    <div className={`flex flex-col min-h-screen bg-${theme}-bg duration-200`}>
+    <div className={`flex flex-col min-h-screen bg-bg duration-200`}>
       <LoadingBar isLoading={isLoading} />
 
       {isAuthenticated && <Heading />}
@@ -96,7 +94,7 @@ const App = () => {
         )}
       </div>
 
-      <Footer className={`bg-${theme}-footer-bg`} />
+      <Footer className={`bg-footer-bg`} />
     </div>
   );
 };
