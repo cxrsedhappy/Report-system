@@ -15,7 +15,7 @@ class TestAPI(unittest.TestCase):
 
     def test_login_success(self):
         credentials = {
-            "login": "rifovna123!",
+            "login": "admin1234",
             "password": "admin1234"
         }
         response = self.client.post("/api/oauth2/authorize", json=credentials)
@@ -33,7 +33,8 @@ class TestAPI(unittest.TestCase):
             "privilege": 1
         }
         response = self.client.post("/api/user", json=user_data)
-        self.assertEqual(response.status_code, 200)
+        print(response.text)
+        self.assertEqual(response.status_code, 201)
         self.assertIn("id", response.json())
 
     def test_get_users(self):
@@ -56,6 +57,7 @@ class TestAPI(unittest.TestCase):
         }
         headers = self._get_auth_header()
         response = self.client.post("/api/student", json=student_data, headers=headers)
+        print(response.text)
         self.assertEqual(response.status_code, 201)
         self.assertIn("id", response.json())
 
