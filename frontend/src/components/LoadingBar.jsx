@@ -6,6 +6,6 @@ function LoadingBar({ isLoading }) {
         ></div>
 
     );
-};
+}
 
 export default LoadingBar;

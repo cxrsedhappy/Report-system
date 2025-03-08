@@ -5,10 +5,6 @@ import ModalEdit from "../components/ModalEdit.jsx";
 
 const BASE_URL = "http://192.168.1.63:8000/api"
 
-function addCallback() {
-  alert("Add callback");
-}
-
 function deleteCallback() {
   alert("Delete callback");
 }
@@ -90,7 +86,6 @@ function StudentsPage() {
     setIsSaving(true);
     const token = Cookies.get('access_token');
 
-    // Подготавливаем данные в формате, требуемом API
     const payload = [
       {
         id: selectedStudent.id,
@@ -98,9 +93,9 @@ function StudentsPage() {
         name: selectedStudent.name,
         surname: selectedStudent.surname,
         lastname: selectedStudent.lastname,
-        group_id: Number(selectedStudent.group_id), // Конвертируем в число
+        group_id: Number(selectedStudent.group_id),
         phone: selectedStudent.phone,
-        entrance: Boolean(Number(selectedStudent.entrance)) // Конвертируем 0/1 в boolean
+        entrance: Boolean(Number(selectedStudent.entrance))
       }
     ];
 
@@ -115,7 +110,6 @@ function StudentsPage() {
       }
     );
 
-    // Обновляем данные после успешного сохранения
     await fetchStudents();
     setIsEditModalOpen(false);
 

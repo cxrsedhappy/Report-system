@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from datetime import datetime
-from email.policy import default
 
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import mapped_column, Mapped, relationship

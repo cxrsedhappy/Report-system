@@ -115,6 +115,6 @@ function Heading() {
       </div>
     </header>
   );
-};
+}
 
 export default Heading;
