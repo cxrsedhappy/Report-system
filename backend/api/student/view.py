@@ -149,12 +149,7 @@ async def update_student(
     }
 )
 async def delete_student(
-        student_ids: List[int] = Query(
-            ...,
-            description="List of student IDs to delete",
-            example=[1, 2],
-            ge=1
-        ),
+        student_ids: List[int],
         session: AsyncSession = Depends(create_session),
         current_user: dict = Depends(get_current_user)
 ) -> dict:
