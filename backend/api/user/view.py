@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, status
+from fastapi.responses import FileResponse
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -14,9 +15,9 @@ async def create_user(user: CreateUserSchema, session: AsyncSession = Depends(cr
     return await crud.create_user(user, session)
 
 
-@router.get('/protected')
-async def protected(current_user = Depends(get_current_user)):
-    return current_user
+@router.get('/get_report')
+async def protected(group_id: int, session: AsyncSession = Depends(create_session)):
+   return await crud.get_group_report(group_id, session, 4)
 
 
 @router.get(
