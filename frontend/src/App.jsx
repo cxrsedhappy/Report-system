@@ -9,7 +9,6 @@ import Footer from "./components/Footer.jsx";
 import LoadingBar from "./components/LoadingBar.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
-import UsersPage from "./pages/UsersPage";
 import PerformancePage from "./pages/PerformancePage";
 import DiplomasPage from "./pages/DiplomasPage";
 import StudentsPage from "./pages/StudentsPage";
@@ -58,11 +57,6 @@ const App = () => {
             <Route path="/groups" element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
                 <GroupsPage />
-              </ProtectedRoute>
-            }/>
-            <Route path="/users" element={
-              <ProtectedRoute isAuthenticated={isAuthenticated}>
-                <UsersPage />
               </ProtectedRoute>
             }/>
             <Route path="/performance" element={

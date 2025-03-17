@@ -44,19 +44,17 @@ function Heading() {
 
           <nav className="hidden md:flex items-center space-x-1">
 
-            {[{"students": "Студенты"}, {"users": "Пользователи"}, {"performance": "Успеваемость"}, {"diplomas": "Дипломы"}, {"groups": "Группы"}].map(
+            {[{"students": "Студенты"}, {"performance": "Успеваемость"}, {"diplomas": "Дипломы"}, {"groups": "Группы"}].map(
               (item, index) => {
-                const key = Object.keys(item)[0];
-                const value = Object.values(item)[0];
                 return (
                   <Link
                     key={index}
                     to={`/${Object.keys(item)[0]}`}
                     className={`px-3 py-2 rounded-md text-sm font-medium ${
-                      location.pathname === `/${key}` ? "text-white bg-indigo-600 hover:bg-indigo-700" : "text-gray-700 hover:bg-gray-100"
+                      location.pathname === `/${Object.keys(item)[0]}` ? "text-white bg-indigo-600 hover:bg-indigo-700" : "text-gray-700 hover:bg-gray-100"
                     } transition-colors`}
                   >
-                    {value}
+                    {Object.values(item)[0]}
                   </Link>
                 );
               }
