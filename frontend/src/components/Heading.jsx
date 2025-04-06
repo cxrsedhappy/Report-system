@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation} from "react-router-dom";
+
 import Cookies from "js-cookie";
 
 function Heading() {
@@ -32,7 +33,7 @@ function Heading() {
   };
 
   return (
-    <header className="fixed w-full z-50 bg-white shadow-md">
+    <header className="fixed w-full z-50 bg-white border-b border-gray-200">
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
 

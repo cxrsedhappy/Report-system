@@ -1,19 +1,19 @@
-import {useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-
-import Cookies from "js-cookie";
 
 import Authorization from "./components/Authorization.jsx"
 import Heading from "./components/Heading.jsx";
 import Footer from "./components/Footer.jsx";
 import LoadingBar from "./components/LoadingBar.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
-
 import PerformancePage from "./pages/PerformancePage";
+
 import DiplomasPage from "./pages/DiplomasPage";
 import StudentsPage from "./pages/StudentsPage";
 import GroupsPage from "./pages/GroupsPage.jsx";
 import AddSubjectPage from "./pages/AddSubjectPage";
+
+import Cookies from "js-cookie";
 
 const validateToken = (token) => {
   try {

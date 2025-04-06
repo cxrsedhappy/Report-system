@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import PropTypes from 'prop-types';
 
 const ModalEdit = ({
   isOpen,
@@ -22,29 +21,32 @@ const ModalEdit = ({
     };
   }, [isOpen]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !editedData) return null;
 
   const fieldConfig = [
     {
       key: 'educational_id',
       title: 'Код студента',
       inputType: 'text',
+      required: true,
     },
-    { key: 'surname', title: 'Фамилия', inputType: 'text' },
-    { key: 'name', title: 'Имя', inputType: 'text' },
+    { key: 'surname', title: 'Фамилия', inputType: 'text', required: true },
+    { key: 'name', title: 'Имя', inputType: 'text', required: true },
     { key: 'lastname', title: 'Отчество', inputType: 'text' },
     {
       key: 'group_id',
       title: 'Группа',
-      options: groups.reduce((acc, group) => {
-        acc[group.id] = group.name;
-        return acc;
-      }, {})
+      isSelect: true,
+      options: groups.map(group => ({ value: group.id, label: group.name }))
     },
     {
       key: 'entrance',
       title: 'Пропуск',
-      options: { 1: 'Есть', 0: 'Отсутствует' }
+      isSelect: true,
+      options: [
+        { value: "1", label: 'Есть' },
+        { value: "0", label: 'Отсутствует' }
+      ]
     },
     { key: 'phone', title: 'Телефон', inputType: 'tel' }
   ];
@@ -55,8 +57,8 @@ const ModalEdit = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
+    <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4 modal-overlay">
+      <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col modal-content">
         <form onSubmit={handleFormSubmit} className="p-6 overflow-y-auto">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-semibold text-gray-800">
@@ -65,7 +67,7 @@ const ModalEdit = ({
             <button
               type="button"
               onClick={onClose}
-              className="text-gray-500 hover:text-gray-700"
+              className="text-gray-500 hover:text-gray-700 transition-colors"
             >
               <i className="fas fa-times text-xl"></i>
             </button>
@@ -75,11 +77,11 @@ const ModalEdit = ({
             {fieldConfig.map((field) => (
               <div key={field.key} className="space-y-1">
                 <label className="block text-sm font-medium text-gray-700">
-                  {field.title}
+                  {field.title} {field.required && <span className="text-red-500">*</span>}
                 </label>
-                {field.options ? (
+                {field.isSelect ? (
                   <select
-                    value={editedData[field.key]}
+                    value={editedData[field.key] || ""}
                     onChange={(e) =>
                       setEditedData({
                         ...editedData,
@@ -87,9 +89,9 @@ const ModalEdit = ({
                       })
                     }
                     className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    required={field.required}
                   >
-                    <option value="">Не выбрано</option>
-                    {Object.entries(field.options).map(([value, label]) => (
+                    {field.options.map(({ value, label }) => (
                       <option key={value} value={value}>
                         {label}
                       </option>
@@ -107,6 +109,7 @@ const ModalEdit = ({
                     }
                     className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100"
                     disabled={field.editable === false}
+                    required={field.required}
                   />
                 )}
               </div>
@@ -118,6 +121,7 @@ const ModalEdit = ({
               type="button"
               onClick={onClose}
               className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
+              disabled={isLoading}
             >
               Отменить
             </button>
@@ -142,14 +146,5 @@ const ModalEdit = ({
   );
 };
 
-ModalEdit.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  editedData: PropTypes.object.isRequired,
-  setEditedData: PropTypes.func.isRequired,
-  onSave: PropTypes.func.isRequired,
-  isLoading: PropTypes.bool,
-  groups: PropTypes.array.isRequired
-};
-
 export default ModalEdit;
+
